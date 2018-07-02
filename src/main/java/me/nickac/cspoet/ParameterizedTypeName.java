@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static me.nickac.cspoet.Util.checkArgument;
 import static me.nickac.cspoet.Util.checkNotNull;
 
 public final class ParameterizedTypeName extends TypeName {

@@ -31,6 +31,8 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 
+import static me.nickac.cspoet.Util.checkArgument;
+
 /** A generated class, interface, or enum declaration. */
 public final class TypeSpec {
   public final Kind kind;
@@ -422,7 +424,7 @@ public final class TypeSpec {
     }
 
     public Builder addAnnotations(Iterable<AnnotationSpec> annotationSpecs) {
-      Util.checkArgument(annotationSpecs != null, "annotationSpecs == null");
+      checkArgument(annotationSpecs != null, "annotationSpecs == null");
       for (AnnotationSpec annotationSpec : annotationSpecs) {
         this.annotations.add(annotationSpec);
       }
@@ -446,7 +448,7 @@ public final class TypeSpec {
     public Builder addModifiers(Modifier... modifiers) {
       Util.checkState(anonymousTypeArguments == null, "forbidden on anonymous types.");
       for (Modifier modifier : modifiers) {
-        Util.checkArgument(modifier != null, "modifiers contain null");
+        checkArgument(modifier != null, "modifiers contain null");
         this.modifiers.add(modifier);
       }
       return this;
@@ -454,7 +456,7 @@ public final class TypeSpec {
 
     public Builder addTypeVariables(Iterable<TypeVariableName> typeVariables) {
       Util.checkState(anonymousTypeArguments == null, "forbidden on anonymous types.");
-      Util.checkArgument(typeVariables != null, "typeVariables == null");
+      checkArgument(typeVariables != null, "typeVariables == null");
       for (TypeVariableName typeVariable : typeVariables) {
         this.typeVariables.add(typeVariable);
       }
@@ -471,7 +473,7 @@ public final class TypeSpec {
       Util.checkState(this.kind == Kind.CLASS, "only classes have super classes, not " + this.kind);
       Util.checkState(this.superclass == ClassName.OBJECT,
           "superclass already set to " + this.superclass);
-      Util.checkArgument(!superclass.isPrimitive(), "superclass may not be a primitive");
+      checkArgument(!superclass.isPrimitive(), "superclass may not be a primitive");
       this.superclass = superclass;
       return this;
     }
@@ -481,7 +483,7 @@ public final class TypeSpec {
     }
 
     public Builder addSuperinterfaces(Iterable<? extends TypeName> superinterfaces) {
-      Util.checkArgument(superinterfaces != null, "superinterfaces == null");
+      checkArgument(superinterfaces != null, "superinterfaces == null");
       for (TypeName superinterface : superinterfaces) {
         addSuperinterface(superinterface);
       }
@@ -489,7 +491,7 @@ public final class TypeSpec {
     }
 
     public Builder addSuperinterface(TypeName superinterface) {
-      Util.checkArgument(superinterface != null, "superinterface == null");
+      checkArgument(superinterface != null, "superinterface == null");
       this.superinterfaces.add(superinterface);
       return this;
     }
@@ -504,7 +506,7 @@ public final class TypeSpec {
 
     public Builder addEnumConstant(String name, TypeSpec typeSpec) {
       checkState(kind == Kind.ENUM, "%s is not enum", this.name);
-      Util.checkArgument(typeSpec.anonymousTypeArguments != null,
+      checkArgument(typeSpec.anonymousTypeArguments != null,
           "enum constants must have anonymous type arguments");
       checkArgument(SourceVersion.isName(name), "not a valid enum constant: %s", name);
       enumConstants.put(name, typeSpec);
@@ -512,7 +514,7 @@ public final class TypeSpec {
     }
 
     public Builder addFields(Iterable<FieldSpec> fieldSpecs) {
-      Util.checkArgument(fieldSpecs != null, "fieldSpecs == null");
+      checkArgument(fieldSpecs != null, "fieldSpecs == null");
       for (FieldSpec fieldSpec : fieldSpecs) {
         addField(fieldSpec);
       }
@@ -556,7 +558,7 @@ public final class TypeSpec {
     }
 
     public Builder addMethods(Iterable<MethodSpec> methodSpecs) {
-      Util.checkArgument(methodSpecs != null, "methodSpecs == null");
+      checkArgument(methodSpecs != null, "methodSpecs == null");
       for (MethodSpec methodSpec : methodSpecs) {
         addMethod(methodSpec);
       }
@@ -586,7 +588,7 @@ public final class TypeSpec {
     }
 
     public Builder addTypes(Iterable<TypeSpec> typeSpecs) {
-      Util.checkArgument(typeSpecs != null, "typeSpecs == null");
+      checkArgument(typeSpecs != null, "typeSpecs == null");
       for (TypeSpec typeSpec : typeSpecs) {
         addType(typeSpec);
       }
@@ -594,7 +596,7 @@ public final class TypeSpec {
     }
 
     public Builder addType(TypeSpec typeSpec) {
-      Util.checkArgument(typeSpec.modifiers.containsAll(kind.implicitTypeModifiers),
+      checkArgument(typeSpec.modifiers.containsAll(kind.implicitTypeModifiers),
           "%s %s.%s requires modifiers %s", kind, name, typeSpec.name,
           kind.implicitTypeModifiers);
       typeSpecs.add(typeSpec);
@@ -612,13 +614,13 @@ public final class TypeSpec {
 
       boolean isAbstract = modifiers.contains(Modifier.ABSTRACT) || kind != Kind.CLASS;
       for (MethodSpec methodSpec : methodSpecs) {
-        Util.checkArgument(isAbstract || !methodSpec.hasModifier(Modifier.ABSTRACT),
+        checkArgument(isAbstract || !methodSpec.hasModifier(Modifier.ABSTRACT),
             "non-abstract type %s cannot declare abstract method %s", name, methodSpec.name);
       }
 
       boolean superclassIsObject = superclass.equals(ClassName.OBJECT);
       int interestingSupertypeCount = (superclassIsObject ? 0 : 1) + superinterfaces.size();
-      Util.checkArgument(anonymousTypeArguments == null || interestingSupertypeCount <= 1,
+      checkArgument(anonymousTypeArguments == null || interestingSupertypeCount <= 1,
           "anonymous type has too many supertypes");
 
       return new TypeSpec(this);

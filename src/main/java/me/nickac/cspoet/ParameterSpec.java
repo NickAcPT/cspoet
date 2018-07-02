@@ -26,6 +26,8 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 
+import static me.nickac.cspoet.Util.checkArgument;
+
 /** A generated parameter declaration. */
 public final class ParameterSpec {
   public final String name;
@@ -128,7 +130,7 @@ public final class ParameterSpec {
     }
 
     public Builder addAnnotations(Iterable<AnnotationSpec> annotationSpecs) {
-      Util.checkArgument(annotationSpecs != null, "annotationSpecs == null");
+      checkArgument(annotationSpecs != null, "annotationSpecs == null");
       for (AnnotationSpec annotationSpec : annotationSpecs) {
         this.annotations.add(annotationSpec);
       }

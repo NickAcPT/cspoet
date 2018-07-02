@@ -26,6 +26,8 @@ import java.util.Map;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeMirror;
 
+import static me.nickac.cspoet.Util.checkArgument;
+
 public final class WildcardTypeName extends TypeName {
   public final List<TypeName> upperBounds;
   public final List<TypeName> lowerBounds;

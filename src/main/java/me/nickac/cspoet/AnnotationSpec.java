@@ -36,6 +36,9 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
+import static me.nickac.cspoet.Util.checkArgument;
+import static me.nickac.cspoet.Util.checkNotNull;
+
 /** A generated annotation on a declaration. */
 public final class AnnotationSpec {
   public final TypeName type;
@@ -148,7 +151,7 @@ public final class AnnotationSpec {
   }
 
   public static Builder builder(ClassName type) {
-    Util.checkNotNull(type, "type == null");
+    checkNotNull(type, "type == null");
     return new Builder(type);
   }
 
@@ -199,7 +202,7 @@ public final class AnnotationSpec {
     }
 
     public Builder addMember(String name, CodeBlock codeBlock) {
-      Util.checkNotNull(name, "name == null");
+      checkNotNull(name, "name == null");
       checkArgument(SourceVersion.isName(name), "not a valid name: %s", name);
       List<CodeBlock> values = members.computeIfAbsent(name, k -> new ArrayList<>());
       values.add(codeBlock);
@@ -212,7 +215,7 @@ public final class AnnotationSpec {
      * the class of the given {@code value} object is not supported.
      */
     Builder addMemberForValue(String memberName, Object value) {
-      Util.checkNotNull(memberName, "memberName == null");
+      checkNotNull(memberName, "memberName == null");
       checkNotNull(value, "value == null, constant non-null value expected for %s", memberName);
       checkArgument(SourceVersion.isName(memberName), "not a valid name: %s", memberName);
       if (value instanceof Class<?>) {

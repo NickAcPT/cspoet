@@ -24,6 +24,8 @@ import java.util.Set;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 
+import static me.nickac.cspoet.Util.checkArgument;
+
 /** A generated field declaration. */
 public final class FieldSpec {
   public final TypeName type;
@@ -127,7 +129,7 @@ public final class FieldSpec {
     }
 
     public Builder addAnnotations(Iterable<AnnotationSpec> annotationSpecs) {
-      Util.checkArgument(annotationSpecs != null, "annotationSpecs == null");
+      checkArgument(annotationSpecs != null, "annotationSpecs == null");
       for (AnnotationSpec annotationSpec : annotationSpecs) {
         this.annotations.add(annotationSpec);
       }

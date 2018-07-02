@@ -27,6 +27,8 @@ import java.util.stream.StreamSupport;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
+import static me.nickac.cspoet.Util.checkArgument;
+
 /**
  * A fragment of a .java file, potentially containing declarations, statements, and documentation.
  * Code blocks are not necessarily well-formed Java code, and are not validated. This class assumes
@@ -211,8 +213,8 @@ public final class CodeBlock {
           formatParts.add("$" + formatChar);
           p += matcher.regionEnd();
         } else {
-          Util.checkArgument(p < format.length() - 1, "dangling $ at end");
-          Util.checkArgument(isNoArgPlaceholder(format.charAt(p + 1)),
+          checkArgument(p < format.length() - 1, "dangling $ at end");
+          checkArgument(isNoArgPlaceholder(format.charAt(p + 1)),
               "unknown format $%s at %s in '%s'", format.charAt(p + 1), p + 1, format);
           formatParts.add(format.substring(p, p + 2));
           p += 2;
@@ -262,7 +264,7 @@ public final class CodeBlock {
 
         // If 'c' doesn't take an argument, we're done.
         if (isNoArgPlaceholder(c)) {
-          Util.checkArgument(
+          checkArgument(
               indexStart == indexEnd, "$$, $>, $<, $[, $], $W, and $Z may not have an index");
           formatParts.add("$" + c);
           continue;
@@ -282,10 +284,10 @@ public final class CodeBlock {
           relativeParameterCount++;
         }
 
-        Util.checkArgument(index >= 0 && index < args.length,
+        checkArgument(index >= 0 && index < args.length,
             "index %d for '%s' not in range (received %s arguments)",
             index + 1, format.substring(indexStart - 1, indexEnd + 1), args.length);
-        Util.checkArgument(!hasIndexed || !hasRelative, "cannot mix indexed and positional parameters");
+        checkArgument(!hasIndexed || !hasRelative, "cannot mix indexed and positional parameters");
 
         addArgument(format, c, args[index]);
 
@@ -293,7 +295,7 @@ public final class CodeBlock {
       }
 
       if (hasRelative) {
-        Util.checkArgument(relativeParameterCount >= args.length,
+        checkArgument(relativeParameterCount >= args.length,
             "unused arguments: expected %s, received %s", relativeParameterCount, args.length);
       }
       if (hasIndexed) {
@@ -304,7 +306,7 @@ public final class CodeBlock {
           }
         }
         String s = unused.size() == 1 ? "" : "s";
-        Util.checkArgument(unused.isEmpty(), "unused argument%s: %s", s, String.join(", ", unused));
+        checkArgument(unused.isEmpty(), "unused argument%s: %s", s, String.join(", ", unused));
       }
       return this;
     }

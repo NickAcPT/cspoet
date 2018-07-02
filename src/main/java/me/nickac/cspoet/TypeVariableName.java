@@ -28,6 +28,8 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 
+import static me.nickac.cspoet.Util.checkArgument;
+
 public final class TypeVariableName extends TypeName {
   public final String name;
   public final List<TypeName> bounds;

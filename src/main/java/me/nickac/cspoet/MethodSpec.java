@@ -35,6 +35,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.Types;
 
+import static me.nickac.cspoet.Util.checkArgument;
+
 /** A generated constructor or method declaration. */
 public final class MethodSpec {
   static final String CONSTRUCTOR = "<init>";
@@ -305,7 +307,7 @@ public final class MethodSpec {
     }
 
     public Builder addAnnotations(Iterable<AnnotationSpec> annotationSpecs) {
-      Util.checkArgument(annotationSpecs != null, "annotationSpecs == null");
+      checkArgument(annotationSpecs != null, "annotationSpecs == null");
       for (AnnotationSpec annotationSpec : annotationSpecs) {
         this.annotations.add(annotationSpec);
       }
@@ -341,7 +343,7 @@ public final class MethodSpec {
     }
 
     public Builder addTypeVariables(Iterable<TypeVariableName> typeVariables) {
-      Util.checkArgument(typeVariables != null, "typeVariables == null");
+      checkArgument(typeVariables != null, "typeVariables == null");
       for (TypeVariableName typeVariable : typeVariables) {
         this.typeVariables.add(typeVariable);
       }
@@ -364,7 +366,7 @@ public final class MethodSpec {
     }
 
     public Builder addParameters(Iterable<ParameterSpec> parameterSpecs) {
-      Util.checkArgument(parameterSpecs != null, "parameterSpecs == null");
+      checkArgument(parameterSpecs != null, "parameterSpecs == null");
       for (ParameterSpec parameterSpec : parameterSpecs) {
         this.parameters.add(parameterSpec);
       }
@@ -394,7 +396,7 @@ public final class MethodSpec {
     }
 
     public Builder addExceptions(Iterable<? extends TypeName> exceptions) {
-      Util.checkArgument(exceptions != null, "exceptions == null");
+      checkArgument(exceptions != null, "exceptions == null");
       for (TypeName exception : exceptions) {
         this.exceptions.add(exception);
       }

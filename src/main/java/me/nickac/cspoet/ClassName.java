@@ -25,6 +25,8 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.SimpleElementVisitor8;
 
+import static me.nickac.cspoet.Util.checkArgument;
+
 /** A fully-qualified class name for top-level and member classes. */
 public final class ClassName extends TypeName implements Comparable<ClassName> {
   public static final ClassName OBJECT = ClassName.get(Object.class);
@@ -137,9 +139,9 @@ public final class ClassName extends TypeName implements Comparable<ClassName> {
 
   public static ClassName get(Class<?> clazz) {
     Util.checkNotNull(clazz, "clazz == null");
-    Util.checkArgument(!clazz.isPrimitive(), "primitive types cannot be represented as a ClassName");
-    Util.checkArgument(!void.class.equals(clazz), "'void' type cannot be represented as a ClassName");
-    Util.checkArgument(!clazz.isArray(), "array types cannot be represented as a ClassName");
+    checkArgument(!clazz.isPrimitive(), "primitive types cannot be represented as a ClassName");
+    checkArgument(!void.class.equals(clazz), "'void' type cannot be represented as a ClassName");
+    checkArgument(!clazz.isArray(), "array types cannot be represented as a ClassName");
 
     String anonymousSuffix = "";
     while (clazz.isAnonymousClass()) {
