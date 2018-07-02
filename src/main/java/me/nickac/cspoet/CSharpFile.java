@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.javapoet;
+package me.nickac.cspoet;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -36,12 +36,11 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.SimpleJavaFileObject;
 
-import static com.squareup.javapoet.Util.checkArgument;
-import static com.squareup.javapoet.Util.checkNotNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static me.nickac.cspoet.Util.checkArgument;
 
-/** A Java file containing a single top level class. */
-public final class JavaFile {
+/** A CSharp file containing a single top level class. */
+public final class CSharpFile {
   private static final Appendable NULL_APPENDABLE = new Appendable() {
     @Override public Appendable append(CharSequence charSequence) {
       return this;
@@ -61,7 +60,7 @@ public final class JavaFile {
   private final Set<String> staticImports;
   private final String indent;
 
-  private JavaFile(Builder builder) {
+  private CSharpFile(Builder builder) {
     this.fileComment = builder.fileComment.build();
     this.packageName = builder.packageName;
     this.typeSpec = builder.typeSpec;
@@ -187,7 +186,7 @@ public final class JavaFile {
     return new SimpleJavaFileObject(uri, Kind.SOURCE) {
       private final long lastModified = System.currentTimeMillis();
       @Override public String getCharContent(boolean ignoreEncodingErrors) {
-        return JavaFile.this.toString();
+        return CSharpFile.this.toString();
       }
       @Override public InputStream openInputStream() throws IOException {
         return new ByteArrayInputStream(getCharContent(true).getBytes(UTF_8));
@@ -199,8 +198,8 @@ public final class JavaFile {
   }
 
   public static Builder builder(String packageName, TypeSpec typeSpec) {
-    checkNotNull(packageName, "packageName == null");
-    checkNotNull(typeSpec, "typeSpec == null");
+    Util.checkNotNull(packageName, "packageName == null");
+    Util.checkNotNull(typeSpec, "typeSpec == null");
     return new Builder(packageName, typeSpec);
   }
 
@@ -267,8 +266,8 @@ public final class JavaFile {
       return this;
     }
 
-    public JavaFile build() {
-      return new JavaFile(this);
+    public CSharpFile build() {
+      return new CSharpFile(this);
     }
   }
 }

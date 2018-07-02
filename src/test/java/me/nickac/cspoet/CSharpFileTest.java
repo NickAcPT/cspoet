@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.javapoet;
+package me.nickac.cspoet;
 
 import java.util.Collections;
 import java.util.Date;
@@ -28,7 +28,7 @@ import org.junit.runners.JUnit4;
 import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(JUnit4.class)
-public final class JavaFileTest {
+public final class CSharpFileTest {
   @Test public void importStaticReadmeExample() {
     ClassName hoverboard = ClassName.get("com.mattel", "Hoverboard");
     ClassName namedBoards = ClassName.get("com.mattel", "Hoverboard", "Boards");
@@ -47,7 +47,7 @@ public final class JavaFileTest {
     TypeSpec hello = TypeSpec.classBuilder("HelloWorld")
         .addMethod(beyond)
         .build();
-    JavaFile example = JavaFile.builder("com.example.helloworld", hello)
+    CSharpFile example = CSharpFile.builder("com.example.helloworld", hello)
         .addStaticImport(hoverboard, "createNimbus")
         .addStaticImport(namedBoards, "*")
         .addStaticImport(Collections.class, "*")
@@ -76,7 +76,7 @@ public final class JavaFileTest {
   }
   @Test public void importStaticForCrazyFormatsWorks() {
     MethodSpec method = MethodSpec.methodBuilder("method").build();
-    JavaFile.builder("com.squareup.tacos",
+    CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addStaticBlock(CodeBlock.builder()
                 .addStatement("$T", Runtime.class)
@@ -99,7 +99,7 @@ public final class JavaFileTest {
   }
 
   @Test public void importStaticMixed() {
-    JavaFile source = JavaFile.builder("com.squareup.tacos",
+    CSharpFile source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addStaticBlock(CodeBlock.builder()
                 .addStatement("assert $1T.valueOf(\"BLOCKED\") == $1T.BLOCKED", Thread.State.class)
@@ -138,7 +138,7 @@ public final class JavaFileTest {
 
   @Ignore("addStaticImport doesn't support members with $L")
   @Test public void importStaticDynamic() {
-    JavaFile source = JavaFile.builder("com.squareup.tacos",
+    CSharpFile source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addMethod(MethodSpec.methodBuilder("main")
                 .addStatement("$T.$L.println($S)", System.class, "out", "hello")
@@ -159,7 +159,7 @@ public final class JavaFileTest {
   }
 
   @Test public void importStaticNone() {
-    assertThat(JavaFile.builder("readme", importStaticTypeSpec("Util"))
+    assertThat(CSharpFile.builder("readme", importStaticTypeSpec("Util"))
         .build().toString()).isEqualTo(""
         + "package readme;\n"
         + "\n"
@@ -175,7 +175,7 @@ public final class JavaFileTest {
   }
 
   @Test public void importStaticOnce() {
-    assertThat(JavaFile.builder("readme", importStaticTypeSpec("Util"))
+    assertThat(CSharpFile.builder("readme", importStaticTypeSpec("Util"))
         .addStaticImport(TimeUnit.SECONDS)
         .build().toString()).isEqualTo(""
         + "package readme;\n"
@@ -194,7 +194,7 @@ public final class JavaFileTest {
   }
 
   @Test public void importStaticTwice() {
-    assertThat(JavaFile.builder("readme", importStaticTypeSpec("Util"))
+    assertThat(CSharpFile.builder("readme", importStaticTypeSpec("Util"))
         .addStaticImport(TimeUnit.SECONDS)
         .addStaticImport(TimeUnit.MINUTES)
         .build().toString()).isEqualTo(""
@@ -214,7 +214,7 @@ public final class JavaFileTest {
   }
 
   @Test public void importStaticUsingWildcards() {
-    assertThat(JavaFile.builder("readme", importStaticTypeSpec("Util"))
+    assertThat(CSharpFile.builder("readme", importStaticTypeSpec("Util"))
         .addStaticImport(TimeUnit.class, "*")
         .addStaticImport(System.class, "*")
         .build().toString()).isEqualTo(""
@@ -243,7 +243,7 @@ public final class JavaFileTest {
 
   }
   @Test public void noImports() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco").build())
         .build()
         .toString();
@@ -255,7 +255,7 @@ public final class JavaFileTest {
   }
 
   @Test public void singleImport() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addField(Date.class, "madeFreshDate")
             .build())
@@ -272,7 +272,7 @@ public final class JavaFileTest {
   }
 
   @Test public void conflictingImports() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addField(Date.class, "madeFreshDate")
             .addField(ClassName.get("java.sql", "Date"), "madeFreshDatabaseDate")
@@ -292,7 +292,7 @@ public final class JavaFileTest {
   }
 
   @Test public void annotatedTypeParam() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addField(ParameterizedTypeName.get(ClassName.get(List.class),
                 ClassName.get("com.squareup.meat", "Chorizo")
@@ -314,7 +314,7 @@ public final class JavaFileTest {
 
   @Test public void skipJavaLangImportsWithConflictingClassLast() throws Exception {
     // Whatever is used first wins! In this case the Float in java.lang is imported.
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addField(ClassName.get("java.lang", "Float"), "litres")
             .addField(ClassName.get("com.squareup.soda", "Float"), "beverage")
@@ -334,7 +334,7 @@ public final class JavaFileTest {
 
   @Test public void skipJavaLangImportsWithConflictingClassFirst() throws Exception {
     // Whatever is used first wins! In this case the Float in com.squareup.soda is imported.
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addField(ClassName.get("com.squareup.soda", "Float"), "beverage")
             .addField(ClassName.get("java.lang", "Float"), "litres")
@@ -355,7 +355,7 @@ public final class JavaFileTest {
   }
 
   @Test public void conflictingParentName() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("A")
             .addType(TypeSpec.classBuilder("B")
                 .addType(TypeSpec.classBuilder("Twin").build())
@@ -391,7 +391,7 @@ public final class JavaFileTest {
   }
 
   @Test public void conflictingChildName() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("A")
             .addType(TypeSpec.classBuilder("B")
                 .addType(TypeSpec.classBuilder("C")
@@ -427,7 +427,7 @@ public final class JavaFileTest {
   }
 
   @Test public void conflictingNameOutOfScope() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("A")
             .addType(TypeSpec.classBuilder("B")
                 .addType(TypeSpec.classBuilder("C")
@@ -467,7 +467,7 @@ public final class JavaFileTest {
   }
 
   @Test public void nestedClassAndSuperclassShareName() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .superclass(ClassName.get("com.squareup.wire", "Message"))
             .addType(TypeSpec.classBuilder("Builder")
@@ -488,7 +488,7 @@ public final class JavaFileTest {
   }
 
   @Test public void classAndSuperclassShareName() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .superclass(ClassName.get("com.taco.bell", "Taco"))
             .build())
@@ -502,7 +502,7 @@ public final class JavaFileTest {
   }
 
   @Test public void conflictingAnnotation() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addAnnotation(ClassName.get("com.taco.bell", "Taco"))
             .build())
@@ -517,7 +517,7 @@ public final class JavaFileTest {
   }
 
   @Test public void conflictingAnnotationReferencedClass() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addAnnotation(AnnotationSpec.builder(ClassName.get("com.squareup.tacos", "MyAnno"))
                 .addMember("value", "$T.class", ClassName.get("com.taco.bell", "Taco"))
@@ -534,7 +534,7 @@ public final class JavaFileTest {
   }
 
   @Test public void conflictingTypeVariableBound() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addTypeVariable(
                 TypeVariableName.get("T", ClassName.get("com.taco.bell", "Taco")))
@@ -549,7 +549,7 @@ public final class JavaFileTest {
   }
 
   @Test public void superclassReferencesSelf() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .superclass(ParameterizedTypeName.get(
                 ClassName.get(Comparable.class), ClassName.get("com.squareup.tacos", "Taco")))
@@ -567,7 +567,7 @@ public final class JavaFileTest {
 
   /** https://github.com/square/javapoet/issues/366 */
   @Test public void annotationIsNestedClass() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("TestComponent")
             .addAnnotation(ClassName.get("dagger", "Component"))
             .addType(TypeSpec.classBuilder("Builder")
@@ -590,7 +590,7 @@ public final class JavaFileTest {
   }
 
   @Test public void defaultPackage() throws Exception {
-    String source = JavaFile.builder("",
+    String source = CSharpFile.builder("",
         TypeSpec.classBuilder("HelloWorld")
             .addMethod(MethodSpec.methodBuilder("main")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
@@ -612,7 +612,7 @@ public final class JavaFileTest {
   }
 
   @Test public void defaultPackageTypesAreNotImported() throws Exception {
-    String source = JavaFile.builder("hello",
+    String source = CSharpFile.builder("hello",
           TypeSpec.classBuilder("World").addSuperinterface(ClassName.get("", "Test")).build())
         .build()
         .toString();
@@ -624,7 +624,7 @@ public final class JavaFileTest {
   }
 
   @Test public void topOfFileComment() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco").build())
         .addFileComment("Generated $L by JavaPoet. DO NOT EDIT!", "2015-01-13")
         .build()
@@ -638,7 +638,7 @@ public final class JavaFileTest {
   }
 
   @Test public void emptyLinesInTopOfFileComment() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco").build())
         .addFileComment("\nGENERATED FILE:\n\nDO NOT EDIT!\n")
         .build()
@@ -656,7 +656,7 @@ public final class JavaFileTest {
   }
 
   @Test public void packageClassConflictsWithNestedClass() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .addField(ClassName.get("com.squareup.tacos", "A"), "a")
             .addType(TypeSpec.classBuilder("A").build())
@@ -675,7 +675,7 @@ public final class JavaFileTest {
   }
 
   @Test public void packageClassConflictsWithSuperlass() throws Exception {
-    String source = JavaFile.builder("com.squareup.tacos",
+    String source = CSharpFile.builder("com.squareup.tacos",
         TypeSpec.classBuilder("Taco")
             .superclass(ClassName.get("com.taco.bell", "A"))
             .addField(ClassName.get("com.squareup.tacos", "A"), "a")
