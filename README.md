@@ -1,14 +1,14 @@
-JavaPoet
+CsPoet
 ========
 
-`JavaPoet` is a Java API for generating `.java` source files.
+`CsPoet` is a fork of `JavaPoet`, a Java API for generating `.java` source files which will be transformed to generate `.cs` files.
 
 Source file generation can be useful when doing things such as annotation processing or interacting
 with metadata files (e.g., database schemas, protocol formats). By generating code, you eliminate
 the need to write boilerplate while also keeping a single source of truth for the metadata.
 
 
-### Example
+### Example (JavaPoet)
 
 Here's a (boring) `HelloWorld` class:
 
@@ -52,7 +52,7 @@ In this case we write the file to `System.out`, but we could also get it as a st
 
 The [Javadoc][javadoc] catalogs the complete JavaPoet API, which we explore below.
 
-### Code & Control Flow
+### Code & Control Flow (JavaPoet)
 
 Most of JavaPoet's API uses plain old immutable Java objects. There's also builders, method chaining
 and varargs to make the API friendly. JavaPoet offers models for classes & interfaces (`TypeSpec`),
@@ -129,7 +129,7 @@ Methods generating methods! And since JavaPoet generates source instead of bytec
 read through it to make sure it's right.
 
 
-### $L for Literals
+### $L for Literals (JavaPoet)
 
 The string-concatenation in calls to `beginControlFlow()` and `addStatement` is distracting. Too
 many operators. To address this, JavaPoet offers a syntax inspired-by but incompatible-with
@@ -152,7 +152,7 @@ private MethodSpec computeRange(String name, int from, int to, String op) {
 Literals are emitted directly to the output code with no escaping. Arguments for literals may be
 strings, primitives, and a few JavaPoet types described below.
 
-### $S for Strings
+### $S for Strings (JavaPoet)
 
 When emitting code that includes string literals, we can use **`$S`** to emit a **string**, complete
 with wrapping quotation marks and escaping. Here's a program that emits 3 methods, each of which
@@ -199,7 +199,7 @@ public final class HelloWorld {
 }
 ```
 
-### $T for Types
+### $T for Types (JavaPoet)
 
 We Java programmers love our types: they make our code easier to understand. And JavaPoet is on
 board. It has rich built-in support for types, including automatic generation of `import`
@@ -304,7 +304,7 @@ public final class HelloWorld {
 }
 ```
 
-#### Import static
+#### Import static (JavaPoet)
 
 JavaPoet supports `import static`. It does it via explicitly collecting type member names. Let's
 enhance the previous example with some static sugar:
@@ -360,7 +360,7 @@ class HelloWorld {
 }
 ```
 
-### $N for Names
+### $N for Names (JavaPoet)
 
 Generated code is often self-referential. Use **`$N`** to refer to another generated declaration by
 its name. Here's a method that calls another:
@@ -398,12 +398,12 @@ MethodSpec byteToHex = MethodSpec.methodBuilder("byteToHex")
     .build();
 ```
 
-### Code block format strings
+### Code block format strings (JavaPoet)
 
 Code blocks may specify the values for their placeholders in a few ways. Only one style may be used
 for each operation on a code block.
 
-#### Relative Arguments
+#### Relative Arguments (JavaPoet)
 
 Pass an argument value for each placeholder in the format string to `CodeBlock.add()`. In each
 example, we generate code to say "I ate 3 tacos"
@@ -412,7 +412,7 @@ example, we generate code to say "I ate 3 tacos"
 CodeBlock.builder().add("I ate $L $L", 3, "tacos")
 ```
 
-#### Positional Arguments
+#### Positional Arguments (JavaPoet)
 
 Place an integer index (1-based) before the placeholder in the format string to specify which
  argument to use.
@@ -421,7 +421,7 @@ Place an integer index (1-based) before the placeholder in the format string to 
 CodeBlock.builder().add("I ate $2L $1L", "tacos", 3)
 ```
 
-#### Named Arguments
+#### Named Arguments (JavaPoet)
 
 Use the syntax `$argumentName:X` where `X` is the format character and call `CodeBlock.addNamed()`
 with a map containing all argument keys in the format string. Argument names use characters in
@@ -434,7 +434,7 @@ map.put("count", 3);
 CodeBlock.builder().addNamed("I ate $count:L $food:L", map)
 ```
 
-### Methods
+### Methods (JavaPoet)
 
 All of the above methods have a code body. Use `Modifiers.ABSTRACT` to get a method without any
 body. This is only legal if the enclosing class is either abstract or an interface.
@@ -466,7 +466,7 @@ and GWT.
 Methods also have parameters, exceptions, varargs, Javadoc, annotations, type variables, and a
 return type. All of these are configured with `MethodSpec.Builder`.
 
-### Constructors
+### Constructors (JavaPoet)
 
 `MethodSpec` is a slight misnomer; it can also be used for constructors:
 
@@ -499,7 +499,7 @@ public class HelloWorld {
 For the most part, constructors work just like methods. When emitting code, JavaPoet will place
 constructors before methods in the output file.
 
-### Parameters
+### Parameters (JavaPoet)
 
 Declare parameters on methods and constructors with either `ParameterSpec.builder()` or
 `MethodSpec`'s convenient `addParameter()` API:
@@ -525,7 +525,7 @@ void welcomeOverlords(final String android, final String robot) {
 
 The extended `Builder` form is necessary when the parameter has annotations (such as `@Nullable`).
 
-### Fields
+### Fields (JavaPoet)
 
 Like parameters, fields can be created either with builders or by using convenient helper methods:
 
@@ -568,7 +568,7 @@ Which generates:
 private final String android = "Lollipop v." + 5.0;
 ```
 
-### Interfaces
+### Interfaces (JavaPoet)
 
 JavaPoet has no trouble with interfaces. Note that interface methods must always be `PUBLIC
 ABSTRACT` and interface fields must always be `PUBLIC STATIC FINAL`. These modifiers are necessary
@@ -598,7 +598,7 @@ public interface HelloWorld {
 }
 ```
 
-### Enums
+### Enums (JavaPoet)
 
 Use `enumBuilder` to create the enum type, and `addEnumConstant()` for each value:
 
@@ -672,7 +672,7 @@ public enum Roshambo {
 }
 ```
 
-### Anonymous Inner Classes
+### Anonymous Inner Classes (JavaPoet)
 
 In the enum code, we used `Types.anonymousInnerClass()`. Anonymous inner classes can also be used in
 code blocks. They are values that can be referenced with `$L`:
@@ -717,7 +717,7 @@ constructor. In the above code we're passing the empty string for no arguments:
 syntax with commas to separate arguments.
 
 
-### Annotations
+### Annotations (JavaPoet)
 
 Simple annotations are easy:
 
@@ -797,7 +797,7 @@ LogReceipt recordEvent(LogRecord logRecord);
 Note that you can call `addMember()` multiple times with the same property name to populate a list
 of values for that property.
 
-### Javadoc
+### Javadoc (JavaPoet)
 
 Fields, methods and types can be documented with Javadoc:
 
@@ -830,7 +830,7 @@ Which generates this:
 
 Use `$T` when referencing types in Javadoc to get automatic imports.
 
-Download
+Download (JavaPoet)
 --------
 
 Download [the latest .jar][dl] or depend via Maven:
@@ -869,7 +869,7 @@ License
 
 
 
-JavaWriter
+JavaWriter (JavaPoet)
 ==========
 
 JavaPoet is the successor to [JavaWriter][javawriter]. New projects should prefer JavaPoet because
