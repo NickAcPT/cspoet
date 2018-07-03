@@ -15,26 +15,15 @@
  */
 package me.nickac.cspoet;
 
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.*;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.SimpleAnnotationValueVisitor8;
+import java.util.*;
 
 import static me.nickac.cspoet.Util.checkArgument;
 import static me.nickac.cspoet.Util.checkNotNull;
@@ -49,61 +38,6 @@ public final class AttributeSpec {
     private AttributeSpec(Builder builder) {
         this.type = builder.type;
         this.members = Util.immutableMultimap(builder.members);
-    }
-
-    void emit(CodeWriter codeWriter, boolean inline) throws IOException {
-        String whitespace = inline ? "" : "\n";
-        String memberSeparator = inline ? ", " : ",\n";
-        if (members.isEmpty()) {
-            // @Singleton
-            codeWriter.emit("[$T]", type);
-        } else if (members.size() == 1 && members.containsKey("value")) {
-            // @Named("foo")
-            codeWriter.emit("[$T(", type);
-            emitAnnotationValues(codeWriter, whitespace, memberSeparator, members.get("value"));
-            codeWriter.emit(")]");
-        } else {
-            // Inline:
-            //   @Column(name = "updated_at", nullable = false)
-            //
-            // Not inline:
-            //   @Column(
-            //       name = "updated_at",
-            //       nullable = false
-            //   )
-            codeWriter.emit("[$T(" + whitespace, type);
-            codeWriter.indent(2);
-            for (Iterator<Map.Entry<String, List<CodeBlock>>> i
-                 = members.entrySet().iterator(); i.hasNext(); ) {
-                Map.Entry<String, List<CodeBlock>> entry = i.next();
-                codeWriter.emit("$L = ", entry.getKey());
-                emitAnnotationValues(codeWriter, whitespace, memberSeparator, entry.getValue());
-                if (i.hasNext()) codeWriter.emit(memberSeparator);
-            }
-            codeWriter.unindent(2);
-            codeWriter.emit(whitespace + ")]");
-        }
-    }
-
-    private void emitAnnotationValues(CodeWriter codeWriter, String whitespace,
-                                      String memberSeparator, List<CodeBlock> values) throws IOException {
-        if (values.size() == 1) {
-            codeWriter.indent(2);
-            codeWriter.emit(values.get(0));
-            codeWriter.unindent(2);
-            return;
-        }
-
-        codeWriter.emit("{" + whitespace);
-        codeWriter.indent(2);
-        boolean first = true;
-        for (CodeBlock codeBlock: values) {
-            if (!first) codeWriter.emit(memberSeparator);
-            codeWriter.emit(codeBlock);
-            first = false;
-        }
-        codeWriter.unindent(2);
-        codeWriter.emit(whitespace + "}");
     }
 
     public static AttributeSpec get(Annotation annotation) {
@@ -159,6 +93,61 @@ public final class AttributeSpec {
 
     public static Builder builder(Class<?> type) {
         return builder(ClassName.get(type));
+    }
+
+    void emit(CodeWriter codeWriter, boolean inline) throws IOException {
+        String whitespace = inline ? "" : "\n";
+        String memberSeparator = inline ? ", " : ",\n";
+        if (members.isEmpty()) {
+            // @Singleton
+            codeWriter.emit("[$T]", type);
+        } else if (members.size() == 1 && members.containsKey("value")) {
+            // @Named("foo")
+            codeWriter.emit("[$T(", type);
+            emitAnnotationValues(codeWriter, whitespace, memberSeparator, members.get("value"));
+            codeWriter.emit(")]");
+        } else {
+            // Inline:
+            //   @Column(name = "updated_at", nullable = false)
+            //
+            // Not inline:
+            //   @Column(
+            //       name = "updated_at",
+            //       nullable = false
+            //   )
+            codeWriter.emit("[$T(" + whitespace, type);
+            codeWriter.indent(2);
+            for (Iterator<Map.Entry<String, List<CodeBlock>>> i
+                 = members.entrySet().iterator(); i.hasNext(); ) {
+                Map.Entry<String, List<CodeBlock>> entry = i.next();
+                codeWriter.emit("$L = ", entry.getKey());
+                emitAnnotationValues(codeWriter, whitespace, memberSeparator, entry.getValue());
+                if (i.hasNext()) codeWriter.emit(memberSeparator);
+            }
+            codeWriter.unindent(2);
+            codeWriter.emit(whitespace + ")]");
+        }
+    }
+
+    private void emitAnnotationValues(CodeWriter codeWriter, String whitespace,
+                                      String memberSeparator, List<CodeBlock> values) throws IOException {
+        if (values.size() == 1) {
+            codeWriter.indent(2);
+            codeWriter.emit(values.get(0));
+            codeWriter.unindent(2);
+            return;
+        }
+
+        codeWriter.emit("{" + whitespace);
+        codeWriter.indent(2);
+        boolean first = true;
+        for (CodeBlock codeBlock: values) {
+            if (!first) codeWriter.emit(memberSeparator);
+            codeWriter.emit(codeBlock);
+            first = false;
+        }
+        codeWriter.unindent(2);
+        codeWriter.emit(whitespace + "}");
     }
 
     public Builder toBuilder() {
