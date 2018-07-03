@@ -37,10 +37,10 @@ TypeSpec helloWorld = TypeSpec.classBuilder("HelloWorld")
     .addMethod(main)
     .build();
 
-JavaFile csharpFile = JavaFile.builder("com.example.helloworld", helloWorld)
+JavaFile javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
     .build();
 
-csharpFile.writeTo(System.out);
+javaFile.writeTo(System.out);
 ```
 
 To declare the main method, we've created a `MethodSpec` "main" configured with modifiers, return
@@ -167,10 +167,10 @@ public static void main(String[] args) throws Exception {
       .addMethod(whatsMyName("marshallMathers"))
       .build();
 
-  JavaFile csharpFile = JavaFile.builder("com.example.helloworld", helloWorld)
+  JavaFile javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
       .build();
 
-  csharpFile.writeTo(System.out);
+  javaFile.writeTo(System.out);
 }
 
 private static MethodSpec whatsMyName(String name) {
@@ -216,10 +216,10 @@ TypeSpec helloWorld = TypeSpec.classBuilder("HelloWorld")
     .addMethod(today)
     .build();
 
-JavaFile csharpFile = JavaFile.builder("com.example.helloworld", helloWorld)
+JavaFile javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
     .build();
 
-csharpFile.writeTo(System.out);
+javaFile.writeTo(System.out);
 ```
 
 That generates the following `.java` file, complete with the necessary `import`:
