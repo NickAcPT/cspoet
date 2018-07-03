@@ -48,7 +48,7 @@ public final class ClassName extends TypeName implements Comparable<ClassName> {
   }
 
   private ClassName(String packageName, ClassName enclosingClassName, String simpleName,
-      List<AnnotationSpec> annotations) {
+                    List<AttributeSpec> annotations) {
     super(annotations);
     this.packageName = packageName;
     this.enclosingClassName = enclosingClassName;
@@ -58,7 +58,8 @@ public final class ClassName extends TypeName implements Comparable<ClassName> {
         : (packageName.isEmpty() ? simpleName : packageName + '.' + simpleName);
   }
 
-  @Override public ClassName annotated(List<AnnotationSpec> annotations) {
+  @Override
+  public ClassName annotated(List<AttributeSpec> annotations) {
     return new ClassName(packageName, enclosingClassName, simpleName,
         concatAnnotations(annotations));
   }

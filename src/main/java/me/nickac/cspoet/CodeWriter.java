@@ -16,7 +16,6 @@
 package me.nickac.cspoet;
 
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Modifier;
 import java.io.IOException;
 import java.util.*;
 
@@ -154,9 +153,9 @@ final class CodeWriter {
         emit(" */\n");
     }
 
-    public void emitAnnotations(List<AnnotationSpec> annotations, boolean inline) throws IOException {
-        for (AnnotationSpec annotationSpec: annotations) {
-            annotationSpec.emit(this, inline);
+    public void emitAnnotations(List<AttributeSpec> annotations, boolean inline) throws IOException {
+        for (AttributeSpec attributeSpec: annotations) {
+            attributeSpec.emit(this, inline);
             emit(inline ? " " : "\n");
         }
     }
@@ -325,9 +324,9 @@ final class CodeWriter {
         if (o instanceof TypeSpec) {
             TypeSpec typeSpec = (TypeSpec) o;
             typeSpec.emit(this, null, Collections.emptySet());
-        } else if (o instanceof AnnotationSpec) {
-            AnnotationSpec annotationSpec = (AnnotationSpec) o;
-            annotationSpec.emit(this, true);
+        } else if (o instanceof AttributeSpec) {
+            AttributeSpec attributeSpec = (AttributeSpec) o;
+            attributeSpec.emit(this, true);
         } else if (o instanceof CodeBlock) {
             CodeBlock codeBlock = (CodeBlock) o;
             emit(codeBlock);

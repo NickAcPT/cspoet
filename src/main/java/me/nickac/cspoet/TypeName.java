@@ -89,7 +89,7 @@ public class TypeName {
 
   /** The name of this type if it is a keyword, or null. */
   private final String keyword;
-  public final List<AnnotationSpec> annotations;
+  public final List<AttributeSpec> annotations;
 
   /** Lazily-initialized toString of this type name. */
   private String cachedString;
@@ -98,21 +98,21 @@ public class TypeName {
     this(keyword, new ArrayList<>());
   }
 
-  private TypeName(String keyword, List<AnnotationSpec> annotations) {
+  private TypeName(String keyword, List<AttributeSpec> annotations) {
     this.keyword = keyword;
     this.annotations = Util.immutableList(annotations);
   }
 
   // Package-private constructor to prevent third-party subclasses.
-  TypeName(List<AnnotationSpec> annotations) {
+  TypeName(List<AttributeSpec> annotations) {
     this(null, annotations);
   }
 
-  public final TypeName annotated(AnnotationSpec... annotations) {
+  public final TypeName annotated(AttributeSpec... annotations) {
     return annotated(Arrays.asList(annotations));
   }
 
-  public TypeName annotated(List<AnnotationSpec> annotations) {
+  public TypeName annotated(List<AttributeSpec> annotations) {
     Util.checkNotNull(annotations, "annotations == null");
     return new TypeName(keyword, concatAnnotations(annotations));
   }
@@ -121,8 +121,8 @@ public class TypeName {
     return new TypeName(keyword);
   }
 
-  protected final List<AnnotationSpec> concatAnnotations(List<AnnotationSpec> annotations) {
-    List<AnnotationSpec> allAnnotations = new ArrayList<>(this.annotations);
+  protected final List<AttributeSpec> concatAnnotations(List<AttributeSpec> annotations) {
+    List<AttributeSpec> allAnnotations = new ArrayList<>(this.annotations);
     allAnnotations.addAll(annotations);
     return allAnnotations;
   }
@@ -230,7 +230,7 @@ public class TypeName {
   }
 
   CodeWriter emitAnnotations(CodeWriter out) throws IOException {
-    for (AnnotationSpec annotation : annotations) {
+    for (AttributeSpec annotation: annotations) {
       annotation.emit(out, true);
       out.emit(" ");
     }

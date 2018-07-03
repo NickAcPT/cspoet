@@ -43,7 +43,7 @@ public final class MethodSpec {
 
   public final String name;
   public final CodeBlock javadoc;
-  public final List<AnnotationSpec> annotations;
+  public final List<AttributeSpec> annotations;
   public final Set<CSharpModifier> modifiers;
   public final List<TypeVariableName> typeVariables;
   public final TypeName returnType;
@@ -278,7 +278,7 @@ public final class MethodSpec {
     private final String name;
 
     private final CodeBlock.Builder javadoc = CodeBlock.builder();
-    private final List<AnnotationSpec> annotations = new ArrayList<>();
+    private final List<AttributeSpec> annotations = new ArrayList<>();
     private final List<CSharpModifier> modifiers = new ArrayList<>();
     private List<TypeVariableName> typeVariables = new ArrayList<>();
     private TypeName returnType;
@@ -306,21 +306,21 @@ public final class MethodSpec {
       return this;
     }
 
-    public Builder addAnnotations(Iterable<AnnotationSpec> annotationSpecs) {
+    public Builder addAnnotations(Iterable<AttributeSpec> annotationSpecs) {
       checkArgument(annotationSpecs != null, "annotationSpecs == null");
-      for (AnnotationSpec annotationSpec : annotationSpecs) {
-        this.annotations.add(annotationSpec);
+      for (AttributeSpec attributeSpec: annotationSpecs) {
+        this.annotations.add(attributeSpec);
       }
       return this;
     }
 
-    public Builder addAnnotation(AnnotationSpec annotationSpec) {
-      this.annotations.add(annotationSpec);
+    public Builder addAnnotation(AttributeSpec attributeSpec) {
+      this.annotations.add(attributeSpec);
       return this;
     }
 
     public Builder addAnnotation(ClassName annotation) {
-      this.annotations.add(AnnotationSpec.builder(annotation).build());
+      this.annotations.add(AttributeSpec.builder(annotation).build());
       return this;
     }
 

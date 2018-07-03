@@ -31,7 +31,7 @@ import static me.nickac.cspoet.Util.checkArgument;
 /** A generated parameter declaration. */
 public final class ParameterSpec {
   public final String name;
-  public final List<AnnotationSpec> annotations;
+  public final List<AttributeSpec> annotations;
   public final Set<CSharpModifier> modifiers;
   public final TypeName type;
 
@@ -121,7 +121,7 @@ public final class ParameterSpec {
     private final TypeName type;
     private final String name;
 
-    private final List<AnnotationSpec> annotations = new ArrayList<>();
+    private final List<AttributeSpec> annotations = new ArrayList<>();
     private final List<CSharpModifier> modifiers = new ArrayList<>();
 
     private Builder(TypeName type, String name) {
@@ -129,21 +129,21 @@ public final class ParameterSpec {
       this.name = name;
     }
 
-    public Builder addAnnotations(Iterable<AnnotationSpec> annotationSpecs) {
+    public Builder addAnnotations(Iterable<AttributeSpec> annotationSpecs) {
       checkArgument(annotationSpecs != null, "annotationSpecs == null");
-      for (AnnotationSpec annotationSpec : annotationSpecs) {
-        this.annotations.add(annotationSpec);
+      for (AttributeSpec attributeSpec: annotationSpecs) {
+        this.annotations.add(attributeSpec);
       }
       return this;
     }
 
-    public Builder addAnnotation(AnnotationSpec annotationSpec) {
-      this.annotations.add(annotationSpec);
+    public Builder addAnnotation(AttributeSpec attributeSpec) {
+      this.annotations.add(attributeSpec);
       return this;
     }
 
     public Builder addAnnotation(ClassName annotation) {
-      this.annotations.add(AnnotationSpec.builder(annotation).build());
+      this.annotations.add(AttributeSpec.builder(annotation).build());
       return this;
     }
 

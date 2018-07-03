@@ -38,7 +38,7 @@ public final class TypeVariableName extends TypeName {
     this(name, bounds, new ArrayList<>());
   }
 
-  private TypeVariableName(String name, List<TypeName> bounds, List<AnnotationSpec> annotations) {
+  private TypeVariableName(String name, List<TypeName> bounds, List<AttributeSpec> annotations) {
     super(annotations);
     this.name = Util.checkNotNull(name, "name == null");
     this.bounds = bounds;
@@ -48,7 +48,8 @@ public final class TypeVariableName extends TypeName {
     }
   }
 
-  @Override public TypeVariableName annotated(List<AnnotationSpec> annotations) {
+  @Override
+  public TypeVariableName annotated(List<AttributeSpec> annotations) {
     return new TypeVariableName(name, bounds, annotations);
   }
 

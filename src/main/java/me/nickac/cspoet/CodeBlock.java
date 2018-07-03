@@ -40,7 +40,7 @@ import static me.nickac.cspoet.Util.checkArgument;
  *
  * <ul>
  *   <li>{@code $L} emits a <em>literal</em> value with no escaping. Arguments for literals may be
- *       strings, primitives, {@linkplain TypeSpec type declarations}, {@linkplain AnnotationSpec
+ *       strings, primitives, {@linkplain TypeSpec type declarations}, {@linkplain AttributeSpec
  *       annotations} and even other code blocks.
  *   <li>{@code $N} emits a <em>name</em>, using name collision avoidance where necessary. Arguments
  *       for names may be strings (actually any {@linkplain CharSequence character sequence}),

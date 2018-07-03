@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Modifier;
 
 import static me.nickac.cspoet.Util.checkArgument;
 
@@ -31,7 +30,7 @@ public final class FieldSpec {
   public final TypeName type;
   public final String name;
   public final CodeBlock javadoc;
-  public final List<AnnotationSpec> annotations;
+  public final List<AttributeSpec> annotations;
   public final Set<CSharpModifier> modifiers;
   public final CodeBlock initializer;
 
@@ -109,7 +108,7 @@ public final class FieldSpec {
     private final String name;
 
     private final CodeBlock.Builder javadoc = CodeBlock.builder();
-    private final List<AnnotationSpec> annotations = new ArrayList<>();
+    private final List<AttributeSpec> annotations = new ArrayList<>();
     private final List<CSharpModifier> modifiers = new ArrayList<>();
     private CodeBlock initializer = null;
 
@@ -128,21 +127,21 @@ public final class FieldSpec {
       return this;
     }
 
-    public Builder addAnnotations(Iterable<AnnotationSpec> annotationSpecs) {
+    public Builder addAnnotations(Iterable<AttributeSpec> annotationSpecs) {
       checkArgument(annotationSpecs != null, "annotationSpecs == null");
-      for (AnnotationSpec annotationSpec : annotationSpecs) {
-        this.annotations.add(annotationSpec);
+      for (AttributeSpec attributeSpec: annotationSpecs) {
+        this.annotations.add(attributeSpec);
       }
       return this;
     }
 
-    public Builder addAnnotation(AnnotationSpec annotationSpec) {
-      this.annotations.add(annotationSpec);
+    public Builder addAnnotation(AttributeSpec attributeSpec) {
+      this.annotations.add(attributeSpec);
       return this;
     }
 
     public Builder addAnnotation(ClassName annotation) {
-      this.annotations.add(AnnotationSpec.builder(annotation).build());
+      this.annotations.add(AttributeSpec.builder(annotation).build());
       return this;
     }
 

@@ -32,12 +32,13 @@ public final class ArrayTypeName extends TypeName {
     this(componentType, new ArrayList<>());
   }
 
-  private ArrayTypeName(TypeName componentType, List<AnnotationSpec> annotations) {
+  private ArrayTypeName(TypeName componentType, List<AttributeSpec> annotations) {
     super(annotations);
     this.componentType = Util.checkNotNull(componentType, "rawType == null");
   }
 
-  @Override public ArrayTypeName annotated(List<AnnotationSpec> annotations) {
+  @Override
+  public ArrayTypeName annotated(List<AttributeSpec> annotations) {
     return new ArrayTypeName(componentType, concatAnnotations(annotations));
   }
 

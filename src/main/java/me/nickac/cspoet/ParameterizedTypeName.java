@@ -39,7 +39,7 @@ public final class ParameterizedTypeName extends TypeName {
   }
 
   private ParameterizedTypeName(ParameterizedTypeName enclosingType, ClassName rawType,
-      List<TypeName> typeArguments, List<AnnotationSpec> annotations) {
+                                List<TypeName> typeArguments, List<AttributeSpec> annotations) {
     super(annotations);
     this.rawType = checkNotNull(rawType, "rawType == null").annotated(annotations);
     this.enclosingType = enclosingType;
@@ -53,7 +53,8 @@ public final class ParameterizedTypeName extends TypeName {
     }
   }
 
-  @Override public ParameterizedTypeName annotated(List<AnnotationSpec> annotations) {
+  @Override
+  public ParameterizedTypeName annotated(List<AttributeSpec> annotations) {
     return new ParameterizedTypeName(
         enclosingType, rawType, typeArguments, concatAnnotations(annotations));
   }

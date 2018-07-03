@@ -33,7 +33,7 @@ public final class TypeSpec {
     public final String name;
     public final CodeBlock anonymousTypeArguments;
     public final CodeBlock javadoc;
-    public final List<AnnotationSpec> annotations;
+    public final List<AttributeSpec> annotations;
     public final Set<CSharpModifier> modifiers;
     public final List<TypeVariableName> typeVariables;
     public final TypeName superclass;
@@ -389,7 +389,7 @@ public final class TypeSpec {
         private final CodeBlock anonymousTypeArguments;
 
         private final CodeBlock.Builder javadoc = CodeBlock.builder();
-        private final List<AnnotationSpec> annotations = new ArrayList<>();
+        private final List<AttributeSpec> annotations = new ArrayList<>();
         private final List<CSharpModifier> modifiers = new ArrayList<>();
         private final List<TypeVariableName> typeVariables = new ArrayList<>();
         private final List<TypeName> superinterfaces = new ArrayList<>();
@@ -420,22 +420,22 @@ public final class TypeSpec {
             return this;
         }
 
-        public Builder addAnnotations(Iterable<AnnotationSpec> annotationSpecs) {
+        public Builder addAnnotations(Iterable<AttributeSpec> annotationSpecs) {
             checkArgument(annotationSpecs != null, "annotationSpecs == null");
-            for (AnnotationSpec annotationSpec: annotationSpecs) {
-                this.annotations.add(annotationSpec);
+            for (AttributeSpec attributeSpec: annotationSpecs) {
+                this.annotations.add(attributeSpec);
             }
             return this;
         }
 
-        public Builder addAnnotation(AnnotationSpec annotationSpec) {
-            Util.checkNotNull(annotationSpec, "annotationSpec == null");
-            this.annotations.add(annotationSpec);
+        public Builder addAnnotation(AttributeSpec attributeSpec) {
+            Util.checkNotNull(attributeSpec, "attributeSpec == null");
+            this.annotations.add(attributeSpec);
             return this;
         }
 
         public Builder addAnnotation(ClassName annotation) {
-            return addAnnotation(AnnotationSpec.builder(annotation).build());
+            return addAnnotation(AttributeSpec.builder(annotation).build());
         }
 
         public Builder addAnnotation(Class<?> annotation) {

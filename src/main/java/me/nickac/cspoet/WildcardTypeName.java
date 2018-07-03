@@ -37,7 +37,7 @@ public final class WildcardTypeName extends TypeName {
   }
 
   private WildcardTypeName(List<TypeName> upperBounds, List<TypeName> lowerBounds,
-      List<AnnotationSpec> annotations) {
+                           List<AttributeSpec> annotations) {
     super(annotations);
     this.upperBounds = Util.immutableList(upperBounds);
     this.lowerBounds = Util.immutableList(lowerBounds);
@@ -53,7 +53,8 @@ public final class WildcardTypeName extends TypeName {
     }
   }
 
-  @Override public WildcardTypeName annotated(List<AnnotationSpec> annotations) {
+  @Override
+  public WildcardTypeName annotated(List<AttributeSpec> annotations) {
     return new WildcardTypeName(upperBounds, lowerBounds, concatAnnotations(annotations));
   }
 
