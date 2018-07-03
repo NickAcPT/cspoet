@@ -118,7 +118,7 @@ public final class ClassName extends TypeName implements Comparable<ClassName> {
   /**
    * Returns a class that shares the same enclosing package or class. If this class is enclosed by
    * another class, this is equivalent to {@code enclosingClassName().nestedClass(name)}. Otherwise
-   * it is equivalent to {@code get(packageName(), name)}.
+   * it is equivalent to {@code get(namespace(), name)}.
    */
   public ClassName peerClass(String name) {
     return new ClassName(packageName, enclosingClassName, name);
