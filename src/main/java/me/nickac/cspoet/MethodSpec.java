@@ -89,7 +89,7 @@ public final class MethodSpec {
       codeWriter.emit(" ");
     }
 
-    if (isConstructor()) {
+    if (isConstructor() || hasModifier(CSharpModifier.OPERATOR)) {
       codeWriter.emit("$L($Z", enclosingName);
     } else {
       codeWriter.emit("$T $L($Z", returnType, name);
