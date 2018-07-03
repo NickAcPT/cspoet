@@ -585,6 +585,9 @@ public final class TypeSpec {
                 checkState(methodSpec.defaultValue == null, "%s %s.%s cannot have a default value",
                         kind, name, methodSpec.name);
             }
+            if (methodSpec.hasModifier(CSharpModifier.OPERATOR)) {
+                Util.requireExactlyOneOf(methodSpec.modifiers, CSharpModifier.STATIC);
+            }
             methodSpecs.add(methodSpec);
             return this;
         }
