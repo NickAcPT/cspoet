@@ -43,10 +43,32 @@ public final class CSharpFileTest {
                 .addStatement("RunIfRemoteNotNull(r => r.@onPluginMessageReceived(arg0, arg1, arg2).ToManaged() )")
                 .build();
 
+        MethodSpec classCtor = MethodSpec.constructorBuilder()
+                .addModifiers(CSharpModifier.PROTECTED)
+                .addParameter(TypeVariableName.get("JObject"), "obj")
+                .addStatement("InnerJsonObject = obj")
+                .build();
+
+        MethodSpec jObjectOperator = MethodSpec.methodBuilder("PluginMessageListener")
+                .addModifiers(CSharpModifier.PUBLIC, CSharpModifier.STATIC, CSharpModifier.EXPLICIT, CSharpModifier.OPERATOR)
+                .addParameter(TypeVariableName.get("JObject"), "obj")
+                .addStatement("return new PluginMessageListener(obj)")
+                .build();
+
+        MethodSpec fromRemoteObject = MethodSpec.methodBuilder("FromRemoteObject")
+                .addModifiers(CSharpModifier.PUBLIC, CSharpModifier.STATIC)
+                .addParameter(TypeVariableName.get("RemoteObject"), "obj")
+                .returns(TypeVariableName.get("PluginMessageListener"))
+                .addStatement("return new PluginMessageListener(obj.InnerJsonObject)")
+                .build();
+
         TypeSpec clazz = TypeSpec.classBuilder("PluginMessageListener")
                 .addModifiers(CSharpModifier.PUBLIC)
                 .addSuperinterface(remoteObject)
                 .addMethod(messageReceived)
+                .addMethod(classCtor)
+                .addMethod(jObjectOperator)
+                .addMethod(fromRemoteObject)
                 .build();
 
         CSharpFile example = CSharpFile.builder("", clazz)

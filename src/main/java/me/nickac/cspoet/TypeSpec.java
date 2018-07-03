@@ -291,17 +291,8 @@ public final class TypeSpec {
                 firstMember = false;
             }
 
-            // Constructors.
-            for (MethodSpec methodSpec: methodSpecs) {
-                if (!methodSpec.isConstructor()) continue;
-                if (!firstMember) codeWriter.emit("\n");
-                methodSpec.emit(codeWriter, name, kind.implicitMethodModifiers);
-                firstMember = false;
-            }
-
             // Methods (static and non-static).
             for (MethodSpec methodSpec: methodSpecs) {
-                if (methodSpec.isConstructor()) continue;
                 if (!firstMember) codeWriter.emit("\n");
                 methodSpec.emit(codeWriter, name, kind.implicitMethodModifiers);
                 firstMember = false;
@@ -617,7 +608,7 @@ public final class TypeSpec {
             checkArgument(kind != Kind.ENUM || !enumConstants.isEmpty(),
                     "at least one enum constant is required for %s", name);
 
-            boolean isAbstract = modifiers.contains(Modifier.ABSTRACT) || kind != Kind.CLASS;
+            boolean isAbstract = modifiers.contains(CSharpModifier.ABSTRACT) || kind != Kind.CLASS;
             for (MethodSpec methodSpec: methodSpecs) {
                 checkArgument(isAbstract || !methodSpec.hasModifier(CSharpModifier.ABSTRACT),
                         "non-abstract type %s cannot declare abstract method %s", name, methodSpec.name);
