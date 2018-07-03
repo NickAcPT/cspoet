@@ -165,17 +165,17 @@ final class CodeWriter {
      * Emits {@code modifiers} in the standard order. Modifiers in {@code implicitModifiers} will not
      * be emitted.
      */
-    public void emitModifiers(Set<Modifier> modifiers, Set<Modifier> implicitModifiers)
+    public void emitModifiers(Set<CSharpModifier> modifiers, Set<CSharpModifier> implicitModifiers)
             throws IOException {
         if (modifiers.isEmpty()) return;
-        for (Modifier modifier: EnumSet.copyOf(modifiers)) {
+        for (CSharpModifier modifier: EnumSet.copyOf(modifiers)) {
             if (implicitModifiers.contains(modifier)) continue;
             emitAndIndent(modifier.name().toLowerCase(Locale.US));
             emitAndIndent(" ");
         }
     }
 
-    public void emitModifiers(Set<Modifier> modifiers) throws IOException {
+    public void emitModifiers(Set<CSharpModifier> modifiers) throws IOException {
         emitModifiers(modifiers, Collections.emptySet());
     }
 

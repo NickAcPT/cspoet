@@ -34,7 +34,7 @@ public final class TypeSpec {
     public final CodeBlock anonymousTypeArguments;
     public final CodeBlock javadoc;
     public final List<AnnotationSpec> annotations;
-    public final Set<Modifier> modifiers;
+    public final Set<CSharpModifier> modifiers;
     public final List<TypeVariableName> typeVariables;
     public final TypeName superclass;
     public final List<TypeName> superinterfaces;
@@ -159,7 +159,7 @@ public final class TypeSpec {
     }
 
     @SuppressWarnings("Duplicates")
-    void emit(CodeWriter codeWriter, String enumName, Set<Modifier> implicitModifiers)
+    void emit(CodeWriter codeWriter, String enumName, Set<CSharpModifier> implicitModifiers)
             throws IOException {
         // Nested classes interrupt wrapped line indentation. Stash the current wrapping state and put
         // it back afterwards when this type is complete.
@@ -264,7 +264,7 @@ public final class TypeSpec {
 
             // Static fields.
             for (FieldSpec fieldSpec: fieldSpecs) {
-                if (!fieldSpec.hasModifier(Modifier.STATIC)) continue;
+                if (!fieldSpec.hasModifier(CSharpModifier.STATIC)) continue;
                 if (!firstMember) codeWriter.emit("\n");
                 fieldSpec.emit(codeWriter, kind.implicitFieldModifiers);
                 firstMember = false;
@@ -278,7 +278,7 @@ public final class TypeSpec {
 
             // Non-static fields.
             for (FieldSpec fieldSpec: fieldSpecs) {
-                if (fieldSpec.hasModifier(Modifier.STATIC)) continue;
+                if (fieldSpec.hasModifier(CSharpModifier.STATIC)) continue;
                 if (!firstMember) codeWriter.emit("\n");
                 fieldSpec.emit(codeWriter, kind.implicitFieldModifiers);
                 firstMember = false;
@@ -359,32 +359,32 @@ public final class TypeSpec {
                 Collections.emptySet()),
 
         INTERFACE(
-                Util.immutableSet(Arrays.asList(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)),
-                Util.immutableSet(Arrays.asList(Modifier.PUBLIC, Modifier.ABSTRACT)),
-                Util.immutableSet(Arrays.asList(Modifier.PUBLIC, Modifier.STATIC)),
-                Util.immutableSet(Collections.singletonList(Modifier.STATIC))),
+                Util.immutableSet(Arrays.asList(CSharpModifier.PUBLIC, CSharpModifier.STATIC, CSharpModifier.READONLY)),
+                Util.immutableSet(Arrays.asList(CSharpModifier.PUBLIC, CSharpModifier.ABSTRACT)),
+                Util.immutableSet(Arrays.asList(CSharpModifier.PUBLIC, CSharpModifier.STATIC)),
+                Util.immutableSet(Collections.singletonList(CSharpModifier.STATIC))),
 
         ENUM(
                 Collections.emptySet(),
                 Collections.emptySet(),
                 Collections.emptySet(),
-                Collections.singleton(Modifier.STATIC)),
+                Collections.singleton(CSharpModifier.STATIC)),
 
         ANNOTATION(
-                Util.immutableSet(Arrays.asList(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)),
-                Util.immutableSet(Arrays.asList(Modifier.PUBLIC, Modifier.ABSTRACT)),
-                Util.immutableSet(Arrays.asList(Modifier.PUBLIC, Modifier.STATIC)),
-                Util.immutableSet(Collections.singletonList(Modifier.STATIC)));
+                Util.immutableSet(Arrays.asList(CSharpModifier.PUBLIC, CSharpModifier.STATIC, CSharpModifier.READONLY)),
+                Util.immutableSet(Arrays.asList(CSharpModifier.PUBLIC, CSharpModifier.ABSTRACT)),
+                Util.immutableSet(Arrays.asList(CSharpModifier.PUBLIC, CSharpModifier.STATIC)),
+                Util.immutableSet(Collections.singletonList(CSharpModifier.STATIC)));
 
-        private final Set<Modifier> implicitFieldModifiers;
-        private final Set<Modifier> implicitMethodModifiers;
-        private final Set<Modifier> implicitTypeModifiers;
-        private final Set<Modifier> asMemberModifiers;
+        private final Set<CSharpModifier> implicitFieldModifiers;
+        private final Set<CSharpModifier> implicitMethodModifiers;
+        private final Set<CSharpModifier> implicitTypeModifiers;
+        private final Set<CSharpModifier> asMemberModifiers;
 
-        Kind(Set<Modifier> implicitFieldModifiers,
-             Set<Modifier> implicitMethodModifiers,
-             Set<Modifier> implicitTypeModifiers,
-             Set<Modifier> asMemberModifiers) {
+        Kind(Set<CSharpModifier> implicitFieldModifiers,
+             Set<CSharpModifier> implicitMethodModifiers,
+             Set<CSharpModifier> implicitTypeModifiers,
+             Set<CSharpModifier> asMemberModifiers) {
             this.implicitFieldModifiers = implicitFieldModifiers;
             this.implicitMethodModifiers = implicitMethodModifiers;
             this.implicitTypeModifiers = implicitTypeModifiers;
@@ -399,7 +399,7 @@ public final class TypeSpec {
 
         private final CodeBlock.Builder javadoc = CodeBlock.builder();
         private final List<AnnotationSpec> annotations = new ArrayList<>();
-        private final List<Modifier> modifiers = new ArrayList<>();
+        private final List<CSharpModifier> modifiers = new ArrayList<>();
         private final List<TypeVariableName> typeVariables = new ArrayList<>();
         private final List<TypeName> superinterfaces = new ArrayList<>();
         private final Map<String, TypeSpec> enumConstants = new LinkedHashMap<>();
@@ -451,9 +451,9 @@ public final class TypeSpec {
             return addAnnotation(ClassName.get(annotation));
         }
 
-        public Builder addModifiers(Modifier... modifiers) {
+        public Builder addModifiers(CSharpModifier... modifiers) {
             checkState(anonymousTypeArguments == null, "forbidden on anonymous types.");
-            for (Modifier modifier: modifiers) {
+            for (CSharpModifier modifier: modifiers) {
                 checkArgument(modifier != null, "modifiers contain null");
                 this.modifiers.add(modifier);
             }
@@ -529,7 +529,7 @@ public final class TypeSpec {
 
         public Builder addField(FieldSpec fieldSpec) {
             if (kind == Kind.INTERFACE || kind == Kind.ANNOTATION) {
-                Util.requireExactlyOneOf(fieldSpec.modifiers, Modifier.PUBLIC, Modifier.PRIVATE);
+                Util.requireExactlyOneOf(fieldSpec.modifiers, CSharpModifier.PUBLIC, CSharpModifier.PRIVATE);
                 Set<Modifier> check = EnumSet.of(Modifier.STATIC, Modifier.FINAL);
                 checkState(fieldSpec.modifiers.containsAll(check), "%s %s.%s requires modifiers %s",
                         kind, name, fieldSpec.name, check);
@@ -538,11 +538,11 @@ public final class TypeSpec {
             return this;
         }
 
-        public Builder addField(TypeName type, String name, Modifier... modifiers) {
+        public Builder addField(TypeName type, String name, CSharpModifier... modifiers) {
             return addField(FieldSpec.builder(type, name, modifiers).build());
         }
 
-        public Builder addField(Type type, String name, Modifier... modifiers) {
+        public Builder addField(Type type, String name, CSharpModifier... modifiers) {
             return addField(TypeName.get(type), name, modifiers);
         }
 
@@ -572,10 +572,10 @@ public final class TypeSpec {
         }
 
         public Builder addMethod(MethodSpec methodSpec) {
+            Util.requireExactlyOneOrNoneOf(methodSpec.modifiers, CSharpModifier.EXPLICIT, CSharpModifier.IMPLICIT);
             if (kind == Kind.INTERFACE) {
-                Util.requireExactlyOneOf(methodSpec.modifiers, Modifier.ABSTRACT, Modifier.STATIC,
-                        Modifier.DEFAULT);
-                Util.requireExactlyOneOf(methodSpec.modifiers, Modifier.PUBLIC, Modifier.PRIVATE);
+                Util.requireExactlyOneOf(methodSpec.modifiers, CSharpModifier.ABSTRACT, CSharpModifier.STATIC);
+                Util.requireExactlyOneOf(methodSpec.modifiers, CSharpModifier.PUBLIC, CSharpModifier.PRIVATE);
             } else if (kind == Kind.ANNOTATION) {
                 checkState(methodSpec.modifiers.equals(kind.implicitMethodModifiers),
                         "%s %s.%s requires modifiers %s",
@@ -583,10 +583,6 @@ public final class TypeSpec {
             }
             if (kind != Kind.ANNOTATION) {
                 checkState(methodSpec.defaultValue == null, "%s %s.%s cannot have a default value",
-                        kind, name, methodSpec.name);
-            }
-            if (kind != Kind.INTERFACE) {
-                checkState(!methodSpec.hasModifier(Modifier.DEFAULT), "%s %s.%s cannot be default",
                         kind, name, methodSpec.name);
             }
             methodSpecs.add(methodSpec);
@@ -620,7 +616,7 @@ public final class TypeSpec {
 
             boolean isAbstract = modifiers.contains(Modifier.ABSTRACT) || kind != Kind.CLASS;
             for (MethodSpec methodSpec: methodSpecs) {
-                checkArgument(isAbstract || !methodSpec.hasModifier(Modifier.ABSTRACT),
+                checkArgument(isAbstract || !methodSpec.hasModifier(CSharpModifier.ABSTRACT),
                         "non-abstract type %s cannot declare abstract method %s", name, methodSpec.name);
             }
 

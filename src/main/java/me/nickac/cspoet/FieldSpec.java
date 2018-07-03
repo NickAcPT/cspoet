@@ -32,7 +32,7 @@ public final class FieldSpec {
   public final String name;
   public final CodeBlock javadoc;
   public final List<AnnotationSpec> annotations;
-  public final Set<Modifier> modifiers;
+  public final Set<CSharpModifier> modifiers;
   public final CodeBlock initializer;
 
   private FieldSpec(Builder builder) {
@@ -46,11 +46,11 @@ public final class FieldSpec {
         : builder.initializer;
   }
 
-  public boolean hasModifier(Modifier modifier) {
+  public boolean hasModifier(CSharpModifier modifier) {
     return modifiers.contains(modifier);
   }
 
-  void emit(CodeWriter codeWriter, Set<Modifier> implicitModifiers) throws IOException {
+  void emit(CodeWriter codeWriter, Set<CSharpModifier> implicitModifiers) throws IOException {
     codeWriter.emitJavadoc(javadoc);
     codeWriter.emitAnnotations(annotations, false);
     codeWriter.emitModifiers(modifiers, implicitModifiers);
@@ -84,14 +84,14 @@ public final class FieldSpec {
     }
   }
 
-  public static Builder builder(TypeName type, String name, Modifier... modifiers) {
+  public static Builder builder(TypeName type, String name, CSharpModifier... modifiers) {
     Util.checkNotNull(type, "type == null");
     checkArgument(SourceVersion.isName(name), "not a valid name: %s", name);
     return new Builder(type, name)
         .addModifiers(modifiers);
   }
 
-  public static Builder builder(Type type, String name, Modifier... modifiers) {
+  public static Builder builder(Type type, String name, CSharpModifier... modifiers) {
     return builder(TypeName.get(type), name, modifiers);
   }
 
@@ -110,7 +110,7 @@ public final class FieldSpec {
 
     private final CodeBlock.Builder javadoc = CodeBlock.builder();
     private final List<AnnotationSpec> annotations = new ArrayList<>();
-    private final List<Modifier> modifiers = new ArrayList<>();
+    private final List<CSharpModifier> modifiers = new ArrayList<>();
     private CodeBlock initializer = null;
 
     private Builder(TypeName type, String name) {
@@ -150,7 +150,7 @@ public final class FieldSpec {
       return addAnnotation(ClassName.get(annotation));
     }
 
-    public Builder addModifiers(Modifier... modifiers) {
+    public Builder addModifiers(CSharpModifier... modifiers) {
       Collections.addAll(this.modifiers, modifiers);
       return this;
     }

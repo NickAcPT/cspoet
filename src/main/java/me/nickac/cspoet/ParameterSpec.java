@@ -32,7 +32,7 @@ import static me.nickac.cspoet.Util.checkArgument;
 public final class ParameterSpec {
   public final String name;
   public final List<AnnotationSpec> annotations;
-  public final Set<Modifier> modifiers;
+  public final Set<CSharpModifier> modifiers;
   public final TypeName type;
 
   private ParameterSpec(Builder builder) {
@@ -83,7 +83,7 @@ public final class ParameterSpec {
     TypeName type = TypeName.get(element.asType());
     String name = element.getSimpleName().toString();
     return ParameterSpec.builder(type, name)
-        .addModifiers(element.getModifiers())
+        //.addModifiers(element.getModifiers())
         .build();
   }
 
@@ -95,14 +95,14 @@ public final class ParameterSpec {
     return result;
   }
 
-  public static Builder builder(TypeName type, String name, Modifier... modifiers) {
+  public static Builder builder(TypeName type, String name, CSharpModifier... modifiers) {
     Util.checkNotNull(type, "type == null");
     checkArgument(SourceVersion.isName(name), "not a valid name: %s", name);
     return new Builder(type, name)
         .addModifiers(modifiers);
   }
 
-  public static Builder builder(Type type, String name, Modifier... modifiers) {
+  public static Builder builder(Type type, String name, CSharpModifier... modifiers) {
     return builder(TypeName.get(type), name, modifiers);
   }
 
@@ -122,7 +122,7 @@ public final class ParameterSpec {
     private final String name;
 
     private final List<AnnotationSpec> annotations = new ArrayList<>();
-    private final List<Modifier> modifiers = new ArrayList<>();
+    private final List<CSharpModifier> modifiers = new ArrayList<>();
 
     private Builder(TypeName type, String name) {
       this.type = type;
@@ -151,14 +151,14 @@ public final class ParameterSpec {
       return addAnnotation(ClassName.get(annotation));
     }
 
-    public Builder addModifiers(Modifier... modifiers) {
+    public Builder addModifiers(CSharpModifier... modifiers) {
       Collections.addAll(this.modifiers, modifiers);
       return this;
     }
 
-    public Builder addModifiers(Iterable<Modifier> modifiers) {
+    public Builder addModifiers(Iterable<CSharpModifier> modifiers) {
       Util.checkNotNull(modifiers, "modifiers == null");
-      for (Modifier modifier : modifiers) {
+      for (CSharpModifier modifier : modifiers) {
         this.modifiers.add(modifier);
       }
       return this;

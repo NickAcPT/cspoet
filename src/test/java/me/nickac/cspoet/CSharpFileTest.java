@@ -39,11 +39,12 @@ public final class CSharpFileTest {
                 .addParameter(TypeVariableName.get("string"), "arg0")
                 .addParameter(TypeVariableName.get("Player"), "arg1")
                 .addParameter(TypeVariableName.get("byte[]"), "arg2")
-                .addModifiers(Modifier.PUBLIC)
+                .addModifiers(CSharpModifier.PUBLIC)
+                .addStatement("RunIfRemoteNotNull(r => r.@onPluginMessageReceived(arg0, arg1, arg2).ToManaged() )")
                 .build();
 
         TypeSpec clazz = TypeSpec.classBuilder("PluginMessageListener")
-                .addModifiers(Modifier.PUBLIC)
+                .addModifiers(CSharpModifier.PUBLIC)
                 .addSuperinterface(remoteObject)
                 .addMethod(messageReceived)
                 .build();
@@ -63,19 +64,19 @@ public final class CSharpFileTest {
                 "\n" +
                 "public class PluginMessageListener : RemoteObject {\n" +
                 "\tpublic void OnPluginMessageReceived(string arg0, Player arg1, byte[] arg2) {\n" +
-                "\t\tRunIfRemoteNotNull(r => r.@onPluginMessageReceived(arg0, arg1, arg2).ToManaged() ); \n" +
+                "\t\tRunIfRemoteNotNull(r => r.@onPluginMessageReceived(arg0, arg1, arg2).ToManaged() );\n" +
                 "\t}\n" +
                 "\n" +
                 "\tprotected PluginMessageListener(JObject obj) {\n" +
-                "\t\tInnerJsonObject = obj; \n" +
+                "\t\tInnerJsonObject = obj;\n" +
                 "\t}\n" +
                 "\n" +
                 "\tpublic static explicit operator PluginMessageListener(JObject obj) {\n" +
-                "\t\treturn new PluginMessageListener(obj); \n" +
+                "\t\treturn new PluginMessageListener(obj);\n" +
                 "\t}\n" +
                 "\n" +
                 "\tpublic static PluginMessageListener FromRemoteObject(RemoteObject obj) {\n" +
-                "\t\treturn new PluginMessageListener(obj.InnerJsonObject); \n" +
+                "\t\treturn new PluginMessageListener(obj.InnerJsonObject);\n" +
                 "\t}\n" +
                 "}\n");
     }
@@ -295,7 +296,7 @@ public final class CSharpFileTest {
 
     private TypeSpec importStaticTypeSpec(String name) {
         MethodSpec method = MethodSpec.methodBuilder("minutesToSeconds")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addModifiers(CSharpModifier.PUBLIC, CSharpModifier.STATIC)
                 .returns(long.class)
                 .addParameter(long.class, "minutes")
                 .addStatement("$T.gc()", System.class)
@@ -675,7 +676,7 @@ public final class CSharpFileTest {
         String source = CSharpFile.builder("",
                 TypeSpec.classBuilder("HelloWorld")
                         .addMethod(MethodSpec.methodBuilder("main")
-                                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addModifiers(CSharpModifier.PUBLIC, CSharpModifier.STATIC)
                                 .addParameter(String[].class, "args")
                                 .addCode("$T.out.println($S);\n", System.class, "Hello World!")
                                 .build())

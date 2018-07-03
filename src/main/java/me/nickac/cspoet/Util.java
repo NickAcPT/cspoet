@@ -77,13 +77,22 @@ final class Util {
     return result;
   }
 
-  static void requireExactlyOneOf(Set<Modifier> modifiers, Modifier... mutuallyExclusive) {
+  static void requireExactlyOneOf(Set<CSharpModifier> modifiers, CSharpModifier... mutuallyExclusive) {
     int count = 0;
-    for (Modifier modifier : mutuallyExclusive) {
+    for (CSharpModifier modifier : mutuallyExclusive) {
       if (modifiers.contains(modifier)) count++;
     }
     checkArgument(count == 1, "modifiers %s must contain one of %s",
-        modifiers, Arrays.toString(mutuallyExclusive));
+            modifiers, Arrays.toString(mutuallyExclusive));
+  }
+
+  static void requireExactlyOneOrNoneOf(Set<CSharpModifier> modifiers, CSharpModifier... mutuallyExclusive) {
+    int count = 0;
+    for (CSharpModifier modifier : mutuallyExclusive) {
+      if (modifiers.contains(modifier)) count++;
+    }
+    checkArgument(count <= 1, "modifiers %s must contain one or zero of %s",
+            modifiers, Arrays.toString(mutuallyExclusive));
   }
 
   static String characterLiteralWithoutSingleQuotes(char c) {

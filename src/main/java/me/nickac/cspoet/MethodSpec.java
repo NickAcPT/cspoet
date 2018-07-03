@@ -44,7 +44,7 @@ public final class MethodSpec {
   public final String name;
   public final CodeBlock javadoc;
   public final List<AnnotationSpec> annotations;
-  public final Set<Modifier> modifiers;
+  public final Set<CSharpModifier> modifiers;
   public final List<TypeVariableName> typeVariables;
   public final TypeName returnType;
   public final List<ParameterSpec> parameters;
@@ -78,7 +78,7 @@ public final class MethodSpec {
         && TypeName.asArray((parameters.get(parameters.size() - 1).type)) != null;
   }
 
-  void emit(CodeWriter codeWriter, String enclosingName, Set<Modifier> implicitModifiers)
+  void emit(CodeWriter codeWriter, String enclosingName, Set<CSharpModifier> implicitModifiers)
       throws IOException {
     codeWriter.emitJavadoc(javadoc);
     codeWriter.emitAnnotations(annotations, false);
@@ -120,9 +120,9 @@ public final class MethodSpec {
       }
     }
 
-    if (hasModifier(Modifier.ABSTRACT)) {
+    if (hasModifier(CSharpModifier.ABSTRACT)) {
       codeWriter.emit(";\n");
-    } else if (hasModifier(Modifier.NATIVE)) {
+    } else if (hasModifier(CSharpModifier.EXTERN)) {
       // Code is allowed to support stuff like GWT JSNI.
       codeWriter.emit(code);
       codeWriter.emit(";\n");
@@ -137,7 +137,7 @@ public final class MethodSpec {
     }
   }
 
-  public boolean hasModifier(Modifier modifier) {
+  public boolean hasModifier(CSharpModifier modifier) {
     return modifiers.contains(modifier);
   }
 
@@ -207,7 +207,7 @@ public final class MethodSpec {
     modifiers = new LinkedHashSet<>(modifiers);
     modifiers.remove(Modifier.ABSTRACT);
     modifiers.remove(Modifier.DEFAULT);
-    methodBuilder.addModifiers(modifiers);
+    //methodBuilder.addModifiers(modifiers);
 
     for (TypeParameterElement typeParameterElement : method.getTypeParameters()) {
       TypeVariable var = (TypeVariable) typeParameterElement.asType();
@@ -279,7 +279,7 @@ public final class MethodSpec {
 
     private final CodeBlock.Builder javadoc = CodeBlock.builder();
     private final List<AnnotationSpec> annotations = new ArrayList<>();
-    private final List<Modifier> modifiers = new ArrayList<>();
+    private final List<CSharpModifier> modifiers = new ArrayList<>();
     private List<TypeVariableName> typeVariables = new ArrayList<>();
     private TypeName returnType;
     private final List<ParameterSpec> parameters = new ArrayList<>();
@@ -328,15 +328,15 @@ public final class MethodSpec {
       return addAnnotation(ClassName.get(annotation));
     }
 
-    public Builder addModifiers(Modifier... modifiers) {
+    public Builder addModifiers(CSharpModifier... modifiers) {
       Util.checkNotNull(modifiers, "modifiers == null");
       Collections.addAll(this.modifiers, modifiers);
       return this;
     }
 
-    public Builder addModifiers(Iterable<Modifier> modifiers) {
+    public Builder addModifiers(Iterable<CSharpModifier> modifiers) {
       Util.checkNotNull(modifiers, "modifiers == null");
-      for (Modifier modifier : modifiers) {
+      for (CSharpModifier modifier : modifiers) {
         this.modifiers.add(modifier);
       }
       return this;
@@ -378,11 +378,11 @@ public final class MethodSpec {
       return this;
     }
 
-    public Builder addParameter(TypeName type, String name, Modifier... modifiers) {
+    public Builder addParameter(TypeName type, String name, CSharpModifier... modifiers) {
       return addParameter(ParameterSpec.builder(type, name, modifiers).build());
     }
 
-    public Builder addParameter(Type type, String name, Modifier... modifiers) {
+    public Builder addParameter(Type type, String name, CSharpModifier... modifiers) {
       return addParameter(TypeName.get(type), name, modifiers);
     }
 
