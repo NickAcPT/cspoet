@@ -62,6 +62,14 @@ public final class CSharpFileTest {
                 .addStatement("return new PluginMessageListener(obj.InnerJsonObject)")
                 .build();
 
+        PropertySpec xProperty = PropertySpec.propertyBuilder("X")
+                .addModifier(CSharpModifier.PUBLIC)
+                .returns(TypeName.DOUBLE)
+                .getter()
+                .addStatement("return RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged())")
+                .endGetter()
+                .build();
+
         TypeSpec clazz = TypeSpec.classBuilder("PluginMessageListener")
                 .addModifiers(CSharpModifier.PUBLIC)
                 .addSuperinterface(remoteObject)
@@ -69,6 +77,7 @@ public final class CSharpFileTest {
                 .addMethod(classCtor)
                 .addMethod(jObjectOperator)
                 .addMethod(fromRemoteObject)
+                .addProperty(xProperty)
                 .build();
 
         CSharpFile example = CSharpFile.builder("", clazz)
@@ -99,6 +108,12 @@ public final class CSharpFileTest {
                 "\n" +
                 "\tpublic static PluginMessageListener FromRemoteObject(RemoteObject obj) {\n" +
                 "\t\treturn new PluginMessageListener(obj.InnerJsonObject);\n" +
+                "\t}\n" +
+                "\n" +
+                "\tpublic double X {\n" +
+                "\t\tget {\n" +
+                "\t\t\treturn RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged());\n" +
+                "\t\t}\n" +
                 "\t}\n" +
                 "}\n");
     }

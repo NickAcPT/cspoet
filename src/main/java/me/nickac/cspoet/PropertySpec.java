@@ -46,6 +46,10 @@ public class PropertySpec {
         this.parameters = Util.immutableList(builder.parameters);
     }
 
+    public static Builder propertyBuilder(String name) {
+        return new Builder(name);
+    }
+
     @SuppressWarnings("Duplicates")
     void emit(CodeWriter codeWriter, String enclosingName, Set<CSharpModifier> implicitModifiers)
             throws IOException {
@@ -53,7 +57,7 @@ public class PropertySpec {
         codeWriter.emitAnnotations(annotations, false);
         codeWriter.emitModifiers(modifiers, implicitModifiers);
 
-        codeWriter.emit("$T $L($Z", returnType, name);
+        codeWriter.emit("$T $L", returnType, name);
 
         boolean firstParameter = true;
         for (Iterator<ParameterSpec> i = parameters.iterator(); i.hasNext(); ) {
@@ -62,8 +66,6 @@ public class PropertySpec {
             parameter.emit(codeWriter, false);
             firstParameter = false;
         }
-
-        codeWriter.emit(")");
 
         if (hasModifier(CSharpModifier.ABSTRACT)) {
             codeWriter.emit(";\n");
@@ -117,8 +119,8 @@ public class PropertySpec {
         private final List<AttributeSpec> annotations = new ArrayList<>();
         private final List<CSharpModifier> modifiers = new ArrayList<>();
         private final List<ParameterSpec> parameters = new ArrayList<>();
-        private final CodeBlock.Builder getterCode = CodeBlock.builder();
-        private final CodeBlock.Builder setterCode = CodeBlock.builder();
+        private CodeBlock.Builder getterCode = CodeBlock.builder();
+        private CodeBlock.Builder setterCode = CodeBlock.builder();
         private List<TypeVariableName> typeVariables = new ArrayList<>();
         private TypeName returnType;
 
@@ -128,6 +130,140 @@ public class PropertySpec {
                     "not a valid name: %s", name);
             this.name = name;
             this.returnType = TypeName.VOID;
+        }
+
+        public Builder addModifier(CSharpModifier modifier) {
+            modifiers.add(modifier);
+            return this;
+        }
+
+        public Builder returns(TypeName returnType) {
+            this.returnType = returnType;
+            return this;
+        }
+
+        public PropertySpec build() {
+            return new PropertySpec(this);
+        }
+
+        public GetterBuilder getter() {
+            return new GetterBuilder(this);
+        }
+
+        public SetterBuilder setter() {
+            return new SetterBuilder(this);
+        }
+
+        public class GetterBuilder {
+            private final CodeBlock.Builder code = CodeBlock.builder();
+            private final PropertySpec.Builder parent;
+
+            public GetterBuilder(Builder parent) {
+                this.parent = parent;
+            }
+
+            /**
+             * @param controlFlow the control flow construct and its code, such as "if (foo == 5)".
+             *                    Shouldn't contain braces or newline characters.
+             */
+            public GetterBuilder beginControlFlow(String controlFlow, Object... args) {
+                code.beginControlFlow(controlFlow, args);
+                return this;
+            }
+
+            /**
+             * @param controlFlow the control flow construct and its code, such as "else if (foo == 10)".
+             *                    Shouldn't contain braces or newline characters.
+             */
+            public GetterBuilder nextControlFlow(String controlFlow, Object... args) {
+                code.nextControlFlow(controlFlow, args);
+                return this;
+            }
+
+            public GetterBuilder endControlFlow() {
+                code.endControlFlow();
+                return this;
+            }
+
+            /**
+             * @param controlFlow the optional control flow construct and its code, such as
+             *                    "while(foo == 20)". Only used for "do/while" control flows.
+             */
+            public GetterBuilder endControlFlow(String controlFlow, Object... args) {
+                code.endControlFlow(controlFlow, args);
+                return this;
+            }
+
+            public GetterBuilder addStatement(String format, Object... args) {
+                code.addStatement(format, args);
+                return this;
+            }
+
+            public GetterBuilder addStatement(CodeBlock codeBlock) {
+                code.addStatement(codeBlock);
+                return this;
+            }
+
+            public PropertySpec.Builder endGetter() {
+                parent.getterCode = code;
+                return parent;
+            }
+        }
+
+        public class SetterBuilder {
+            private final CodeBlock.Builder code = CodeBlock.builder();
+            private final PropertySpec.Builder parent;
+
+            public SetterBuilder(Builder parent) {
+                this.parent = parent;
+            }
+
+            /**
+             * @param controlFlow the control flow construct and its code, such as "if (foo == 5)".
+             *                    Shouldn't contain braces or newline characters.
+             */
+            public SetterBuilder beginControlFlow(String controlFlow, Object... args) {
+                code.beginControlFlow(controlFlow, args);
+                return this;
+            }
+
+            /**
+             * @param controlFlow the control flow construct and its code, such as "else if (foo == 10)".
+             *                    Shouldn't contain braces or newline characters.
+             */
+            public SetterBuilder nextControlFlow(String controlFlow, Object... args) {
+                code.nextControlFlow(controlFlow, args);
+                return this;
+            }
+
+            public SetterBuilder endControlFlow() {
+                code.endControlFlow();
+                return this;
+            }
+
+            /**
+             * @param controlFlow the optional control flow construct and its code, such as
+             *                    "while(foo == 20)". Only used for "do/while" control flows.
+             */
+            public SetterBuilder endControlFlow(String controlFlow, Object... args) {
+                code.endControlFlow(controlFlow, args);
+                return this;
+            }
+
+            public SetterBuilder addStatement(String format, Object... args) {
+                code.addStatement(format, args);
+                return this;
+            }
+
+            public SetterBuilder addStatement(CodeBlock codeBlock) {
+                code.addStatement(codeBlock);
+                return this;
+            }
+
+            public PropertySpec.Builder endSetter() {
+                parent.setterCode = code;
+                return parent;
+            }
         }
     }
 }

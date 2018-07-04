@@ -301,6 +301,13 @@ public final class TypeSpec {
                 firstMember = false;
             }
 
+            // Properties
+            for (PropertySpec propertySpec: propertySpecs) {
+                if (!firstMember) codeWriter.emit("\n");
+                propertySpec.emit(codeWriter, name, kind.implicitMethodModifiers);
+                firstMember = false;
+            }
+
             // Types.
             for (TypeSpec typeSpec: typeSpecs) {
                 if (!firstMember) codeWriter.emit("\n");

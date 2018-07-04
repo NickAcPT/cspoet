@@ -63,17 +63,17 @@ public class TypeName {
     public static final TypeName CHAR = new TypeName("char");
     public static final TypeName FLOAT = new TypeName("float");
     public static final TypeName DOUBLE = new TypeName("double");
-    public static final ClassName OBJECT = ClassName.get("java.lang", "Object");
+    public static final ClassName OBJECT = ClassName.get("System", "Object");
 
-    private static final ClassName BOXED_VOID = ClassName.get("java.lang", "Void");
-    private static final ClassName BOXED_BOOLEAN = ClassName.get("java.lang", "Boolean");
-    private static final ClassName BOXED_BYTE = ClassName.get("java.lang", "Byte");
-    private static final ClassName BOXED_SHORT = ClassName.get("java.lang", "Short");
-    private static final ClassName BOXED_INT = ClassName.get("java.lang", "Integer");
-    private static final ClassName BOXED_LONG = ClassName.get("java.lang", "Long");
-    private static final ClassName BOXED_CHAR = ClassName.get("java.lang", "Character");
-    private static final ClassName BOXED_FLOAT = ClassName.get("java.lang", "Float");
-    private static final ClassName BOXED_DOUBLE = ClassName.get("java.lang", "Double");
+    private static final ClassName BOXED_VOID = ClassName.get("System", "Void");
+    private static final ClassName BOXED_BOOLEAN = ClassName.get("System", "Boolean");
+    private static final ClassName BOXED_BYTE = ClassName.get("System", "Byte");
+    private static final ClassName BOXED_SHORT = ClassName.get("System", "Int16");
+    private static final ClassName BOXED_INT = ClassName.get("System", "Int32");
+    private static final ClassName BOXED_LONG = ClassName.get("System", "Int64");
+    private static final ClassName BOXED_CHAR = ClassName.get("System", "Char");
+    private static final ClassName BOXED_FLOAT = ClassName.get("System", "Single");
+    private static final ClassName BOXED_DOUBLE = ClassName.get("System", "Double");
     public final List<AttributeSpec> annotations;
     /**
      * The name of this type if it is a keyword, or null.
