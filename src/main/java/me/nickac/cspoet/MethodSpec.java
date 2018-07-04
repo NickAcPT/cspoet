@@ -51,7 +51,7 @@ public final class MethodSpec {
 
     private MethodSpec(Builder builder) {
         CodeBlock code = builder.code.build();
-        checkArgument(code.isEmpty() || !builder.modifiers.contains(Modifier.ABSTRACT),
+        checkArgument(code.isEmpty() || !builder.modifiers.contains(CSharpModifier.ABSTRACT),
                 "abstract method %s cannot have code", builder.name);
         checkArgument(!builder.varargs || lastParameterIsArray(builder.parameters),
                 "last parameter of varargs method %s must be an array", builder.name);

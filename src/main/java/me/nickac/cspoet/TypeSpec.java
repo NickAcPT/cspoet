@@ -140,7 +140,7 @@ public final class TypeSpec {
         return annotationBuilder(Util.checkNotNull(className, "className == null").simpleName());
     }
 
-    public boolean hasModifier(Modifier modifier) {
+    public boolean hasModifier(CSharpModifier modifier) {
         return modifiers.contains(modifier);
     }
 
@@ -532,7 +532,7 @@ public final class TypeSpec {
         public Builder addField(FieldSpec fieldSpec) {
             if (kind == Kind.INTERFACE || kind == Kind.ANNOTATION) {
                 Util.requireExactlyOneOf(fieldSpec.modifiers, CSharpModifier.PUBLIC, CSharpModifier.PRIVATE);
-                Set<Modifier> check = EnumSet.of(Modifier.STATIC, Modifier.FINAL);
+                Set<CSharpModifier> check = EnumSet.of(CSharpModifier.STATIC, CSharpModifier.READONLY);
                 checkState(fieldSpec.modifiers.containsAll(check), "%s %s.%s requires modifiers %s",
                         kind, name, fieldSpec.name, check);
             }
