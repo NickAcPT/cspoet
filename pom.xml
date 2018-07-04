@@ -9,13 +9,13 @@
     <version>7</version>
   </parent>
 
-  <groupId>com.squareup</groupId>
-  <artifactId>javapoet</artifactId>
+  <groupId>me.nickac</groupId>
+  <artifactId>cspoet</artifactId>
   <version>1.12.0-SNAPSHOT</version>
 
-  <name>JavaPoet</name>
-  <description>Use beautiful Java code to generate beautiful Java code.</description>
-  <url>http://github.com/square/javapoet/</url>
+  <name>CSPoet</name>
+  <description>Use beautiful Java code to generate beautiful C# code.</description>
+  <url>http://github.com/NickAcPT/cspoet/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -127,9 +127,9 @@
           </dependency>
         </dependencies>
         <configuration>
-          <failsOnError>true</failsOnError>
+          <failsOnError>false</failsOnError>
           <configLocation>checkstyle.xml</configLocation>
-          <consoleOutput>true</consoleOutput>
+          <consoleOutput>false</consoleOutput>
         </configuration>
         <executions>
           <execution>
