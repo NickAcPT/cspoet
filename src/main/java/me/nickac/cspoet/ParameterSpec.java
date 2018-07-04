@@ -71,7 +71,7 @@ public final class ParameterSpec {
         return builder(TypeName.get(type), name, modifiers);
     }
 
-    public boolean hasModifier(Modifier modifier) {
+    public boolean hasModifier(CSharpModifier modifier) {
         return modifiers.contains(modifier);
     }
 
