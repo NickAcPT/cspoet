@@ -43,6 +43,7 @@ public final class TypeSpec {
     public final CodeBlock staticBlock;
     public final CodeBlock initializerBlock;
     public final List<MethodSpec> methodSpecs;
+    public final List<PropertySpec> propertySpecs;
     public final List<TypeSpec> typeSpecs;
     public final List<Element> originatingElements;
 
@@ -61,6 +62,7 @@ public final class TypeSpec {
         this.staticBlock = builder.staticBlock.build();
         this.initializerBlock = builder.initializerBlock.build();
         this.methodSpecs = Util.immutableList(builder.methodSpecs);
+        this.propertySpecs = Util.immutableList(builder.propertySpecs);
         this.typeSpecs = Util.immutableList(builder.typeSpecs);
 
         List<Element> originatingElementsMutable = new ArrayList<>();
@@ -93,6 +95,7 @@ public final class TypeSpec {
         this.methodSpecs = Collections.emptyList();
         this.typeSpecs = Collections.emptyList();
         this.originatingElements = Collections.emptyList();
+        this.propertySpecs = Collections.emptyList();
     }
 
     public static Builder classBuilder(String name) {
@@ -398,6 +401,7 @@ public final class TypeSpec {
         private final CodeBlock.Builder staticBlock = CodeBlock.builder();
         private final CodeBlock.Builder initializerBlock = CodeBlock.builder();
         private final List<MethodSpec> methodSpecs = new ArrayList<>();
+        private final List<PropertySpec> propertySpecs = new ArrayList<>();
         private final List<TypeSpec> typeSpecs = new ArrayList<>();
         private final List<Element> originatingElements = new ArrayList<>();
         private TypeName superclass = ClassName.OBJECT;
@@ -601,6 +605,13 @@ public final class TypeSpec {
 
         public Builder addOriginatingElement(Element originatingElement) {
             originatingElements.add(originatingElement);
+            return this;
+        }
+
+
+        public Builder addProperty(PropertySpec propertySpec) {
+            //TODO: Add property checks
+            propertySpecs.add(propertySpec);
             return this;
         }
 

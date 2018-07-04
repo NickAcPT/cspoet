@@ -72,8 +72,10 @@ public final class CodeBlock {
      */
     final List<String> formatParts;
     final List<Object> args;
+    final int statementCount;
 
     private CodeBlock(Builder builder) {
+        this.statementCount = builder.statementCount;
         this.formatParts = Util.immutableList(builder.formatParts);
         this.args = Util.immutableList(builder.args);
     }
@@ -130,6 +132,10 @@ public final class CodeBlock {
         return formatParts.isEmpty();
     }
 
+    public int getStatementCount() {
+        return statementCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,6 +170,7 @@ public final class CodeBlock {
     public static final class Builder {
         final List<String> formatParts = new ArrayList<>();
         final List<Object> args = new ArrayList<>();
+        int statementCount = 0;
 
         private Builder() {
         }
@@ -406,11 +413,14 @@ public final class CodeBlock {
             add("$[");
             add(format, args);
             add(";\n$]");
+            statementCount++;
             return this;
         }
 
         public Builder addStatement(CodeBlock codeBlock) {
-            return addStatement("$L", codeBlock);
+            Builder returnVal = addStatement("$L", codeBlock);
+            statementCount += codeBlock.statementCount - 1;
+            return returnVal;
         }
 
         public Builder add(CodeBlock codeBlock) {
