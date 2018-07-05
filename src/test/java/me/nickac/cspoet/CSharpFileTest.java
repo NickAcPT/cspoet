@@ -32,6 +32,50 @@ import static com.google.common.truth.Truth.assertThat;
 public final class CSharpFileTest {
 
     @Test
+    public void canOutputInlineProperties() {
+        PropertySpec xProperty = PropertySpec.propertyBuilder("X")
+                .addModifier(CSharpModifier.PUBLIC)
+                .returns(TypeName.DOUBLE)
+                .getter()
+                .addStatement("return RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged())")
+                .endGetter()
+                .build();
+        assertThat(xProperty.toString()).isEqualTo("public double X => RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged());\n");
+    }
+
+
+    @Test
+    public void canOutputGetAndSetterInline() {
+        PropertySpec xProperty = PropertySpec.propertyBuilder("X")
+                .addModifier(CSharpModifier.PUBLIC)
+                .returns(TypeName.DOUBLE)
+                .getter()
+                .addStatement("return RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged())")
+                .endGetter()
+                .setter()
+                .addStatement("base.setX(value)")
+                .endSetter()
+                .build();
+        assertThat(xProperty.toString()).isEqualTo("public double X {\n" +
+                "\tget => RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged());\n" +
+                "\tset => base.setX(value);\n" +
+                "}\n");
+    }
+
+
+    @Test
+    public void getStatementCountIsWorking() {
+        PropertySpec xProperty = PropertySpec.propertyBuilder("X")
+                .addModifier(CSharpModifier.PUBLIC)
+                .returns(TypeName.DOUBLE)
+                .getter()
+                .addStatement("return RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged())")
+                .endGetter()
+                .build();
+        assertThat(xProperty.getterCode.getStatementCount()).isEqualTo(1);
+    }
+
+    @Test
     public void canGeneratePluginMessageListenerClass() {
         TypeName remoteObject = TypeVariableName.get("RemoteObject");
 
@@ -110,11 +154,7 @@ public final class CSharpFileTest {
                 "\t\treturn new PluginMessageListener(obj.InnerJsonObject);\n" +
                 "\t}\n" +
                 "\n" +
-                "\tpublic double X {\n" +
-                "\t\tget {\n" +
-                "\t\t\treturn RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged());\n" +
-                "\t\t}\n" +
-                "\t}\n" +
+                "\tpublic double X => RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged());\n" +
                 "}\n");
     }
 }

@@ -69,25 +69,44 @@ public class PropertySpec {
 
         if (hasModifier(CSharpModifier.ABSTRACT)) {
             codeWriter.emit(";\n");
+        } else if (!getterCode.isEmpty() && getterCode.statementCount == 1 && setterCode.isEmpty()) {
+            codeWriter.emit(" => ");
+            String getter = getterCode.toString();
+            if (getter.startsWith("return "))
+                getter = getter.substring(7);
+            codeWriter.emit(getter);
         } else {
             codeWriter.emit(" {\n");
 
             codeWriter.indent();
 
             if (!getterCode.isEmpty()) {
-                codeWriter.emit("get {\n");
-                codeWriter.indent();
-                codeWriter.emit(getterCode);
-                codeWriter.unindent();
-                codeWriter.emit("}\n");
+                if (getterCode.statementCount != 1) {
+                    codeWriter.emit("get {\n");
+                    codeWriter.indent();
+                    codeWriter.emit(getterCode);
+                    codeWriter.unindent();
+                    codeWriter.emit("}\n");
+                } else {
+                    codeWriter.emit("get => ");
+                    String getter = getterCode.toString();
+                    if (getter.startsWith("return "))
+                        getter = getter.substring(7);
+                    codeWriter.emit(getter);
+                }
             }
 
             if (!setterCode.isEmpty()) {
-                codeWriter.emit("set {\n");
-                codeWriter.indent();
-                codeWriter.emit(setterCode);
-                codeWriter.unindent();
-                codeWriter.emit("}\n");
+                if (setterCode.statementCount != 1) {
+                    codeWriter.emit("set {\n");
+                    codeWriter.indent();
+                    codeWriter.emit(setterCode);
+                    codeWriter.unindent();
+                    codeWriter.emit("}\n");
+                } else {
+                    codeWriter.emit("set => ");
+                    codeWriter.emit(setterCode);
+                }
             }
 
             codeWriter.unindent();
