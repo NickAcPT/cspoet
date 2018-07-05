@@ -17,7 +17,6 @@ package me.nickac.cspoet;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.Modifier;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -43,6 +42,7 @@ public final class TypeSpec {
     public final CodeBlock staticBlock;
     public final CodeBlock initializerBlock;
     public final List<MethodSpec> methodSpecs;
+    public final List<CodeBlock> miscCodeBlocks;
     public final List<PropertySpec> propertySpecs;
     public final List<TypeSpec> typeSpecs;
     public final List<Element> originatingElements;
@@ -64,6 +64,7 @@ public final class TypeSpec {
         this.methodSpecs = Util.immutableList(builder.methodSpecs);
         this.propertySpecs = Util.immutableList(builder.propertySpecs);
         this.typeSpecs = Util.immutableList(builder.typeSpecs);
+        this.miscCodeBlocks = Util.immutableList(builder.miscCodeBlocks);
 
         List<Element> originatingElementsMutable = new ArrayList<>();
         originatingElementsMutable.addAll(builder.originatingElements);
@@ -96,6 +97,7 @@ public final class TypeSpec {
         this.typeSpecs = Collections.emptyList();
         this.originatingElements = Collections.emptyList();
         this.propertySpecs = Collections.emptyList();
+        this.miscCodeBlocks = Collections.emptyList();
     }
 
     public static Builder classBuilder(String name) {
@@ -154,10 +156,12 @@ public final class TypeSpec {
         builder.superinterfaces.addAll(superinterfaces);
         builder.enumConstants.putAll(enumConstants);
         builder.fieldSpecs.addAll(fieldSpecs);
+        builder.propertySpecs.addAll(propertySpecs);
         builder.methodSpecs.addAll(methodSpecs);
         builder.typeSpecs.addAll(typeSpecs);
         builder.initializerBlock.add(initializerBlock);
         builder.staticBlock.add(staticBlock);
+        builder.miscCodeBlocks.addAll(miscCodeBlocks);
         return builder;
     }
 
@@ -308,6 +312,13 @@ public final class TypeSpec {
                 firstMember = false;
             }
 
+            // Misc Properties
+            for (CodeBlock codeBlock: miscCodeBlocks) {
+                if (!firstMember) codeWriter.emit("\n");
+                codeWriter.emit(codeBlock);
+                firstMember = false;
+            }
+
             // Types.
             for (TypeSpec typeSpec: typeSpecs) {
                 if (!firstMember) codeWriter.emit("\n");
@@ -408,6 +419,7 @@ public final class TypeSpec {
         private final CodeBlock.Builder staticBlock = CodeBlock.builder();
         private final CodeBlock.Builder initializerBlock = CodeBlock.builder();
         private final List<MethodSpec> methodSpecs = new ArrayList<>();
+        private final List<CodeBlock> miscCodeBlocks = new ArrayList<>();
         private final List<PropertySpec> propertySpecs = new ArrayList<>();
         private final List<TypeSpec> typeSpecs = new ArrayList<>();
         private final List<Element> originatingElements = new ArrayList<>();
