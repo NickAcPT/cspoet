@@ -627,10 +627,19 @@ public final class TypeSpec {
             return this;
         }
 
-
         public Builder addProperty(PropertySpec propertySpec) {
             //TODO: Add property checks
             propertySpecs.add(propertySpec);
+            return this;
+        }
+
+        public Builder addMiscCodeblock(String block) {
+            miscCodeBlocks.add(CodeBlock.of(block));
+            return this;
+        }
+
+        public Builder addMiscCodeblock(CodeBlock block) {
+            miscCodeBlocks.add(block);
             return this;
         }
 
