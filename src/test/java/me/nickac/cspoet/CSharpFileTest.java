@@ -77,7 +77,7 @@ public final class CSharpFileTest {
 
     @Test
     public void canGeneratePluginMessageListenerClass() {
-        TypeName remoteObject = TypeVariableName.get("RemoteObject");
+        TypeName remoteObject = ClassName.get("Newtonsoft.Json.Linq", "RemoteObject");
 
         MethodSpec messageReceived = MethodSpec.methodBuilder("OnPluginMessageReceived")
                 .addParameter(TypeVariableName.get("string"), "arg0")
@@ -127,7 +127,7 @@ public final class CSharpFileTest {
         CSharpFile example = CSharpFile.builder("", clazz)
                 .addUsing("System.Collections.Generic")
                 .addUsing("System.IO")
-                .addUsing("Newtonsoft.Json.Linq")
+                //.addUsing("Newtonsoft.Json.Linq")
                 .addUsing("NickAc.ManagedInterface.Wrapper")
                 .build();
 

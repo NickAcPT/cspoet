@@ -143,7 +143,7 @@ public final class CSharpFile {
         int importedTypesCount = 0;
         for (ClassName className: new TreeSet<>(codeWriter.importedTypes().values())) {
             if (skipJavaLangImports && className.packageName().equals("java.lang")) continue;
-            codeWriter.emit("using $L;\n", className.withoutAnnotations());
+            codeWriter.emit("using $L;\n", className.packageName());
             importedTypesCount++;
         }
 
@@ -160,7 +160,7 @@ public final class CSharpFile {
 
         if (!staticImports.isEmpty()) {
             for (String signature: staticImports) {
-                codeWriter.emit("import static $L;\n", signature);
+                codeWriter.emit("using static $L;\n", signature);
             }
             codeWriter.emit("\n");
         }
