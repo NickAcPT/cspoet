@@ -145,8 +145,7 @@ public class PropertySpec {
 
         private Builder(String name) {
             Util.checkNotNull(name, "name == null");
-            checkArgument(SourceVersion.isName(name),
-                    "not a valid name: %s", name);
+            //checkArgument(SourceVersion.isName(name), "not a valid name: %s", name);
             this.name = name;
             this.returnType = TypeName.VOID;
         }

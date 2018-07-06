@@ -197,7 +197,7 @@ public final class AttributeSpec {
 
         public Builder addMember(String name, CodeBlock codeBlock) {
             checkNotNull(name, "name == null");
-            checkArgument(SourceVersion.isName(name), "not a valid name: %s", name);
+            //checkArgument(SourceVersion.isName(name), "not a valid name: %s", name);
             List<CodeBlock> values = members.computeIfAbsent(name, k -> new ArrayList<>());
             values.add(codeBlock);
             return this;
@@ -211,7 +211,7 @@ public final class AttributeSpec {
         Builder addMemberForValue(String memberName, Object value) {
             checkNotNull(memberName, "memberName == null");
             checkNotNull(value, "value == null, constant non-null value expected for %s", memberName);
-            checkArgument(SourceVersion.isName(memberName), "not a valid name: %s", memberName);
+            //checkArgument(SourceVersion.isName(memberName), "not a valid name: %s", memberName);
             if (value instanceof Class<?>) {
                 return addMember(memberName, "$T.class", value);
             }
