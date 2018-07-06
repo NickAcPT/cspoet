@@ -135,7 +135,6 @@ public final class CSharpFileTest {
         assertThat(example.toString()).isEqualTo("using Newtonsoft.Json.Linq;\n" +
                 "using System.Collections.Generic;\n" +
                 "using System.IO;\n" +
-                "using Newtonsoft.Json.Linq;\n" +
                 "using NickAc.ManagedInterface.Wrapper;\n" +
                 "\n" +
                 "public class PluginMessageListener : RemoteObject {\n" +
