@@ -427,7 +427,7 @@ public final class TypeSpec {
 
         private Builder(Kind kind, String name,
                         CodeBlock anonymousTypeArguments) {
-            checkArgument(name == null || SourceVersion.isName(name), "not a valid name: %s", name);
+            //checkArgument(name == null || SourceVersion.isName(name), "not a valid name: %s", name);
             this.kind = kind;
             this.name = name;
             this.anonymousTypeArguments = anonymousTypeArguments;
@@ -528,7 +528,7 @@ public final class TypeSpec {
             checkState(kind == Kind.ENUM, "%s is not enum", this.name);
             checkArgument(typeSpec.anonymousTypeArguments != null,
                     "enum constants must have anonymous type arguments");
-            checkArgument(SourceVersion.isName(name), "not a valid enum constant: %s", name);
+            //checkArgument(SourceVersion.isName(name), "not a valid enum constant: %s", name);
             enumConstants.put(name, typeSpec);
             return this;
         }
