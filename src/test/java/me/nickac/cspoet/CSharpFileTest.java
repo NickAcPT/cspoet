@@ -132,7 +132,8 @@ public final class CSharpFileTest {
                 .build();
 
 
-        assertThat(example.toString()).isEqualTo("using System.Collections.Generic;\n" +
+        assertThat(example.toString()).isEqualTo("using Newtonsoft.Json.Linq;\n" +
+                "using System.Collections.Generic;\n" +
                 "using System.IO;\n" +
                 "using Newtonsoft.Json.Linq;\n" +
                 "using NickAc.ManagedInterface.Wrapper;\n" +
