@@ -289,8 +289,6 @@ public final class MethodSpec {
 
         private Builder(String name) {
             Util.checkNotNull(name, "name == null");
-            checkArgument(name.equals(CONSTRUCTOR),
-                    "not a valid name: %s", name);
             this.name = name;
             this.returnType = name.equals(CONSTRUCTOR) ? null : TypeName.VOID;
         }
