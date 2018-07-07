@@ -15,7 +15,6 @@
  */
 package me.nickac.cspoet;
 
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -28,6 +27,22 @@ import static me.nickac.cspoet.Util.checkState;
  * A generated class, interface, or enum declaration.
  */
 public final class TypeSpec {
+    private static final Appendable NULL_APPENDABLE = new Appendable() {
+        @Override
+        public Appendable append(CharSequence charSequence) {
+            return this;
+        }
+
+        @Override
+        public Appendable append(CharSequence charSequence, int start, int end) {
+            return this;
+        }
+
+        @Override
+        public Appendable append(char c) {
+            return this;
+        }
+    };
     public final Kind kind;
     public final String name;
     public final CodeBlock anonymousTypeArguments;
@@ -174,7 +189,7 @@ public final class TypeSpec {
         codeWriter.statementLine = -1;
 
         try {
-            if (enumName != null) {
+            if (enumName != null && !enumName.isEmpty()) {
                 codeWriter.emitJavadoc(javadoc);
                 codeWriter.emitAnnotations(annotations, false);
                 codeWriter.emit("$L", enumName);
@@ -336,6 +351,17 @@ public final class TypeSpec {
         } finally {
             codeWriter.statementLine = previousStatementLine;
         }
+    }
+
+    public String[] getUsings() {
+        CodeWriter importsCollector = new CodeWriter(NULL_APPENDABLE, "", Collections.emptySet(), Collections.emptySet());
+        try {
+            emit(importsCollector, "", Collections.singleton(CSharpModifier.PRIVATE));
+        } catch (IOException e) {
+            return new String[0];
+        }
+        Map<String, ClassName> suggestedImports = importsCollector.suggestedImports();
+        return suggestedImports.entrySet().stream().map(c -> String.format("%s", c.getValue().packageName())).toArray(String[]::new);
     }
 
     @Override

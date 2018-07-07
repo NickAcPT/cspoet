@@ -181,4 +181,22 @@ public final class CSharpFileTest {
                 .build();
         assertThat(xProperty.getUsings()).isEqualTo(new String[]{"Lol"});
     }
+
+    @Test
+    public void canGetTypeUsings() {
+        PropertySpec xProperty = PropertySpec.propertyBuilder("X")
+                .addModifier(CSharpModifier.PUBLIC)
+                .returns(ClassName.get("2Lol", "RemoteObject2"))
+                .getter()
+                .addStatement("return RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged())")
+                .endGetter()
+                .build();
+        TypeSpec clazz = TypeSpec.classBuilder("PluginMessageListener")
+                .addModifiers(CSharpModifier.PUBLIC)
+                .addSuperinterface(ClassName.get("Lol", "RemoteObject"))
+                .addProperty(xProperty)
+                .build();
+
+        assertThat(clazz.getUsings()).isEqualTo(new String[]{"Lol", "2Lol"});
+    }
 }
