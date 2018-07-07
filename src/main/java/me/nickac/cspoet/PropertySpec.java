@@ -119,6 +119,36 @@ public class PropertySpec {
         return modifiers.contains(modifier);
     }
 
+
+    private static final Appendable NULL_APPENDABLE = new Appendable() {
+        @Override
+        public Appendable append(CharSequence charSequence) {
+            return this;
+        }
+
+        @Override
+        public Appendable append(CharSequence charSequence, int start, int end) {
+            return this;
+        }
+
+        @Override
+        public Appendable append(char c) {
+            return this;
+        }
+    };
+
+    public String[] getUsings() {
+        CodeWriter importsCollector = new CodeWriter(NULL_APPENDABLE, "", Collections.emptySet(), Collections.emptySet());
+        try {
+            emit(importsCollector, "", Collections.singleton(CSharpModifier.PRIVATE));
+        } catch (IOException e) {
+            return new String[0];
+        }
+        Map<String, ClassName> suggestedImports = importsCollector.suggestedImports();
+        return suggestedImports.entrySet().stream().map(c -> String.format("%s", c.getValue().packageName())).toArray(String[]::new);
+    }
+
+
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder();
@@ -283,5 +313,6 @@ public class PropertySpec {
                 return parent;
             }
         }
+
     }
 }

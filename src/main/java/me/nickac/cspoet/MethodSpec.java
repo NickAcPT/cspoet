@@ -15,7 +15,6 @@
  */
 package me.nickac.cspoet;
 
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
@@ -256,6 +255,34 @@ public final class MethodSpec {
         } catch (IOException e) {
             throw new AssertionError();
         }
+    }
+
+    private static final Appendable NULL_APPENDABLE = new Appendable() {
+        @Override
+        public Appendable append(CharSequence charSequence) {
+            return this;
+        }
+
+        @Override
+        public Appendable append(CharSequence charSequence, int start, int end) {
+            return this;
+        }
+
+        @Override
+        public Appendable append(char c) {
+            return this;
+        }
+    };
+
+    public String[] getUsings() {
+        CodeWriter importsCollector = new CodeWriter(NULL_APPENDABLE, "", Collections.emptySet(), Collections.emptySet());
+        try {
+            emit(importsCollector, "", Collections.singleton(CSharpModifier.PRIVATE));
+        } catch (IOException e) {
+            return new String[0];
+        }
+        Map<String, ClassName> suggestedImports = importsCollector.suggestedImports();
+        return suggestedImports.entrySet().stream().map(c -> String.format("%s", c.getValue().packageName())).toArray(String[]::new);
     }
 
     public Builder toBuilder() {

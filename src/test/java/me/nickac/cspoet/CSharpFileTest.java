@@ -157,4 +157,28 @@ public final class CSharpFileTest {
                 "\tpublic double X => RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged());\n" +
                 "}\n");
     }
+
+    @Test
+    public void canGetUsingsMethod() {
+        MethodSpec fromRemoteObject = MethodSpec.methodBuilder("FromRemoteObject")
+                .addModifiers(CSharpModifier.PUBLIC, CSharpModifier.STATIC)
+                .addParameter(ClassName.get("Lol", "RemoteObject"), "obj")
+                .returns(TypeVariableName.get("PluginMessageListener"))
+                .addStatement("return new PluginMessageListener(obj.InnerJsonObject)")
+                .build();
+        assertThat(fromRemoteObject.getUsings()).isEqualTo(new String[]{"Lol"});
+    }
+
+
+    @Test
+    public void canGetUsingsProperty() {
+        PropertySpec xProperty = PropertySpec.propertyBuilder("X")
+                .addModifier(CSharpModifier.PUBLIC)
+                .returns(ClassName.get("Lol", "RemoteObject"))
+                .getter()
+                .addStatement("return RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged())")
+                .endGetter()
+                .build();
+        assertThat(xProperty.getUsings()).isEqualTo(new String[]{"Lol"});
+    }
 }
