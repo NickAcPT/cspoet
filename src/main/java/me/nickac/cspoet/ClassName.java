@@ -255,6 +255,15 @@ public final class ClassName extends TypeName implements Comparable<ClassName> {
 
     @Override
     CodeWriter emit(CodeWriter out) throws IOException {
+        return emit(out, false);
+    }
+
+    CodeWriter emit(CodeWriter out, boolean emitSimpleName) throws IOException {
+        if (emitSimpleName) {
+            out.emit(simpleName);
+            return out;
+        }
+
         boolean charsEmitted = false;
         for (ClassName className: enclosingClasses()) {
             String simpleName;

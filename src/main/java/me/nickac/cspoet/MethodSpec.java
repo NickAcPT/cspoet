@@ -179,7 +179,7 @@ public final class MethodSpec {
         if (isConstructor() || hasModifier(CSharpModifier.OPERATOR)) {
             codeWriter.emit("$L($Z", enclosingName);
         } else {
-            codeWriter.emit("$T $L($Z", returnType, name);
+            codeWriter.emit("$t $L($Z", returnType, name);
         }
 
         boolean firstParameter = true;

@@ -166,6 +166,7 @@ public final class CSharpFileTest {
                 .returns(TypeVariableName.get("PluginMessageListener"))
                 .addStatement("return new PluginMessageListener(obj.InnerJsonObject)")
                 .build();
+        System.out.println(fromRemoteObject.toString());
         assertThat(fromRemoteObject.getUsings()).isEqualTo(new String[]{"Lol"});
     }
 
@@ -179,6 +180,7 @@ public final class CSharpFileTest {
                 .addStatement("return RunIfRemoteNotNull<double>(r => (double) r.@getX().ToManaged())")
                 .endGetter()
                 .build();
+        System.out.println(xProperty.toString());
         assertThat(xProperty.getUsings()).isEqualTo(new String[]{"Lol"});
     }
 
@@ -197,6 +199,7 @@ public final class CSharpFileTest {
                 .addProperty(xProperty)
                 .build();
 
+        System.out.println(clazz.toString());
         assertThat(clazz.getUsings()).isEqualTo(new String[]{"Lol", "2Lol"});
     }
 }

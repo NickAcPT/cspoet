@@ -338,6 +338,7 @@ public final class CodeBlock {
                 case 'S':
                     this.args.add(argToString(arg));
                     break;
+                case 't':
                 case 'T':
                     this.args.add(argToType(arg));
                     break;

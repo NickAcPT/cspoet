@@ -57,7 +57,7 @@ public class PropertySpec {
         codeWriter.emitAnnotations(annotations, false);
         codeWriter.emitModifiers(modifiers, implicitModifiers);
 
-        codeWriter.emit("$T $L", returnType, name);
+        codeWriter.emit("$t $L", returnType, name);
 
         boolean firstParameter = true;
         for (Iterator<ParameterSpec> i = parameters.iterator(); i.hasNext(); ) {

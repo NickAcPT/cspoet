@@ -81,7 +81,7 @@ public final class ParameterSpec {
         if (varargs) {
             TypeName.asArray(type).emit(codeWriter, true);
         } else {
-            type.emit(codeWriter);
+            codeWriter.emit("$t", type);
         }
         codeWriter.emit(" $L", name);
     }

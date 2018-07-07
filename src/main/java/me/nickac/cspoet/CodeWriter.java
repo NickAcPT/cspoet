@@ -232,6 +232,7 @@ final class CodeWriter {
                             : "null");
                     break;
 
+                case "$t":
                 case "$T":
                     TypeName typeName = (TypeName) codeBlock.args.get(a++);
                     // defer "typeName.emit(this)" if next format part will be handled by the default case
@@ -245,7 +246,11 @@ final class CodeWriter {
                             }
                         }
                     }
-                    typeName.emit(this);
+                    if (part.equals("$t") && typeName instanceof ClassName) {
+                        importableType(((ClassName) typeName));
+                        ((ClassName) typeName).emit(this, true);
+                    } else
+                        typeName.emit(this);
                     break;
 
                 case "$$":
