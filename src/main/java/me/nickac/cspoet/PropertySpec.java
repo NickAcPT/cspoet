@@ -76,12 +76,12 @@ public class PropertySpec {
                 getter = getter.substring(7);
             codeWriter.emit(getter);
         } else {
-            codeWriter.emit(" {" + ((getterCode.statementCount != 1) ? "\n" : ""));
+            codeWriter.emit(" {" + ((getterCode.statementCount > 1) ? "\n" : " "));
 
             codeWriter.indent();
 
             if (!getterCode.isEmpty()) {
-                if (setterCode.toString().equals(";")) {
+                if (getterCode.toString().equals(";")) {
                     codeWriter.emit("get; ");
                 } else if (getterCode.statementCount != 1) {
                     codeWriter.emit("get {\n");
@@ -115,7 +115,7 @@ public class PropertySpec {
 
             codeWriter.unindent();
 
-            codeWriter.emit("}\n");
+            codeWriter.emit("}" + ((getterCode.statementCount > 1) ? "\n" : " "));
         }
     }
 
