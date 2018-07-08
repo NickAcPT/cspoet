@@ -115,7 +115,7 @@ public class PropertySpec {
 
             codeWriter.unindent();
 
-            codeWriter.emit("}\n"));
+            codeWriter.emit("}\n");
         }
     }
 
