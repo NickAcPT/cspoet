@@ -80,6 +80,8 @@ public class PropertySpec {
 
             codeWriter.indent();
 
+            boolean hasInsertedNewLine = false;
+
             if (!getterCode.isEmpty()) {
                 if (getterCode.toString().equals(";")) {
                     codeWriter.emit("get; ");
@@ -89,6 +91,7 @@ public class PropertySpec {
                     codeWriter.emit(getterCode);
                     codeWriter.unindent();
                     codeWriter.emit("}\n");
+                    hasInsertedNewLine = true;
                 } else {
                     codeWriter.emit("get => ");
                     String getter = getterCode.toString();
@@ -107,11 +110,15 @@ public class PropertySpec {
                     codeWriter.emit(setterCode);
                     codeWriter.unindent();
                     codeWriter.emit("}\n");
+                    hasInsertedNewLine = true;
                 } else {
                     codeWriter.emit("set => ");
                     codeWriter.emit(setterCode);
                 }
             }
+
+            if (!hasInsertedNewLine)
+                codeWriter.emit("\n");
 
             codeWriter.unindent();
 
