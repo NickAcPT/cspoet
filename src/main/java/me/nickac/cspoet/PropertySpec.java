@@ -115,7 +115,7 @@ public class PropertySpec {
 
             codeWriter.unindent();
 
-            codeWriter.emit("}" + ((getterCode.statementCount > 1) ? "\n" : " "));
+            codeWriter.emit("}\n"));
         }
     }
 
