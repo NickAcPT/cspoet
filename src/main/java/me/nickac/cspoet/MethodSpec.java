@@ -207,7 +207,7 @@ public final class MethodSpec {
             }
         }
 
-        if (hasModifier(CSharpModifier.ABSTRACT)) {
+        if (hasModifier(CSharpModifier.ABSTRACT) || code.isEmpty()) {
             codeWriter.emit(";\n");
         } else if (hasModifier(CSharpModifier.EXTERN)) {
             // Code is allowed to support stuff like GWT JSNI.

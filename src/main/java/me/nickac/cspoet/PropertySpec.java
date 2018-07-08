@@ -76,12 +76,14 @@ public class PropertySpec {
                 getter = getter.substring(7);
             codeWriter.emit(getter);
         } else {
-            codeWriter.emit(" {\n");
+            codeWriter.emit(" {" + ((getterCode.statementCount != 1) ? "\n" : ""));
 
             codeWriter.indent();
 
             if (!getterCode.isEmpty()) {
-                if (getterCode.statementCount != 1) {
+                if (setterCode.toString().equals(";")) {
+                    codeWriter.emit("get; ");
+                } else if (getterCode.statementCount != 1) {
                     codeWriter.emit("get {\n");
                     codeWriter.indent();
                     codeWriter.emit(getterCode);
@@ -97,7 +99,9 @@ public class PropertySpec {
             }
 
             if (!setterCode.isEmpty()) {
-                if (setterCode.statementCount != 1) {
+                if (setterCode.toString().equals(";")) {
+                    codeWriter.emit("set; ");
+                } else if (setterCode.statementCount != 1) {
                     codeWriter.emit("set {\n");
                     codeWriter.indent();
                     codeWriter.emit(setterCode);
@@ -210,6 +214,11 @@ public class PropertySpec {
                 this.parent = parent;
             }
 
+            public PropertySpec.Builder empty() {
+                parent.getterCode = CodeBlock.of(";").toBuilder();
+                return parent;
+            }
+
             /**
              * @param controlFlow the control flow construct and its code, such as "if (foo == 5)".
              *                    Shouldn't contain braces or newline characters.
@@ -264,6 +273,11 @@ public class PropertySpec {
 
             public SetterBuilder(Builder parent) {
                 this.parent = parent;
+            }
+
+            public PropertySpec.Builder empty() {
+                parent.setterCode = CodeBlock.of(";").toBuilder();
+                return parent;
             }
 
             /**
