@@ -76,7 +76,7 @@ public class PropertySpec {
                 getter = getter.substring(7);
             codeWriter.emit(getter);
         } else {
-            codeWriter.emit(" {" + ((getterCode.statementCount > 1) ? "\n" : " "));
+            codeWriter.emit(" {\n");
 
             codeWriter.indent();
 
@@ -84,7 +84,7 @@ public class PropertySpec {
                 if (getterCode.toString().equals(";")) {
                     codeWriter.emit("get; ");
                 } else if (getterCode.statementCount != 1) {
-                    codeWriter.emit("get {\n");
+                    codeWriter.emit("get {" + ((getterCode.statementCount > 1) ? "\n" : " "));
                     codeWriter.indent();
                     codeWriter.emit(getterCode);
                     codeWriter.unindent();
