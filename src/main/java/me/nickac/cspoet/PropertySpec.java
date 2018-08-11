@@ -67,9 +67,7 @@ public class PropertySpec {
             firstParameter = false;
         }
 
-        if (hasModifier(CSharpModifier.ABSTRACT)) {
-            codeWriter.emit(";\n");
-        } else if (!getterCode.isEmpty() && getterCode.statementCount == 1 && setterCode.isEmpty()) {
+        if (!hasModifier(CSharpModifier.ABSTRACT) && !getterCode.isEmpty() && getterCode.statementCount == 1 && setterCode.isEmpty()) {
             codeWriter.emit(" => ");
             String getter = getterCode.toString();
             if (getter.startsWith("return "))
@@ -114,6 +112,7 @@ public class PropertySpec {
                 } else {
                     codeWriter.emit("set => ");
                     codeWriter.emit(setterCode);
+                    hasInsertedNewLine = true;
                 }
             }
 

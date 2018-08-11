@@ -64,6 +64,21 @@ public final class CSharpFileTest {
 
 
     @Test
+    public void canOutputAbstractPropertyGetAndSetterInline() {
+        PropertySpec xProperty = PropertySpec.propertyBuilder("X")
+                .addModifier(CSharpModifier.PUBLIC)
+                .addModifier(CSharpModifier.ABSTRACT)
+                .returns(TypeName.DOUBLE)
+                .getter().empty()
+                .setter().empty()
+                .build();
+        assertThat(xProperty.toString()).isEqualTo("public abstract double X {\n" +
+                "\tget; set; \n" +
+                "}\n");
+    }
+
+
+    @Test
     public void getStatementCountIsWorking() {
         PropertySpec xProperty = PropertySpec.propertyBuilder("X")
                 .addModifier(CSharpModifier.PUBLIC)
