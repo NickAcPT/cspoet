@@ -212,8 +212,7 @@ public final class MethodSpec {
         if (extraInfo != null && !extraInfo.isEmpty()) {
             codeWriter
                     .emit(" : ")
-                    .emit(extraInfo)
-                    .emit(" ");
+                    .emit(extraInfo);
         }
 
         if (hasModifier(CSharpModifier.ABSTRACT) || code.isEmpty()) {
