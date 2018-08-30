@@ -45,6 +45,7 @@ public final class MethodSpec {
     public final List<ParameterSpec> parameters;
     public final boolean varargs;
     public final List<TypeName> exceptions;
+    public final String extraInfo;
     public final CodeBlock code;
     public final CodeBlock defaultValue;
 
@@ -65,6 +66,7 @@ public final class MethodSpec {
         this.varargs = builder.varargs;
         this.exceptions = Util.immutableList(builder.exceptions);
         this.defaultValue = builder.defaultValue;
+        this.extraInfo = builder.extraInfo;
         this.code = code;
     }
 
@@ -207,6 +209,13 @@ public final class MethodSpec {
             }
         }
 
+        if (extraInfo != null && !extraInfo.isEmpty()) {
+            codeWriter
+                    .emit(" : ")
+                    .emit(extraInfo)
+                    .emit(" ");
+        }
+
         if (hasModifier(CSharpModifier.ABSTRACT) || code.isEmpty()) {
             codeWriter.emit(";\n");
         } else if (hasModifier(CSharpModifier.EXTERN)) {
@@ -312,6 +321,7 @@ public final class MethodSpec {
         private List<TypeVariableName> typeVariables = new ArrayList<>();
         private TypeName returnType;
         private boolean varargs;
+        private String extraInfo;
         private CodeBlock defaultValue;
 
         private Builder(String name) {
@@ -505,6 +515,11 @@ public final class MethodSpec {
 
         public Builder addStatement(CodeBlock codeBlock) {
             code.addStatement(codeBlock);
+            return this;
+        }
+
+        public Builder withExtraBuildInfo(String info) {
+            extraInfo = info;
             return this;
         }
 
